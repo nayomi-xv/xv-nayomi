@@ -28,9 +28,9 @@
 *{box-sizing:border-box}
 html{background:var(--olivo-1);overflow-x:hidden}
 body{margin:0;color:var(--perla);font:400 16px/1.5 var(--f-texto);overflow-x:hidden;-webkit-tap-highlight-color:transparent}
-#largo{height:1000vh}
+#largo{height:640vh}
 #fondo{position:fixed;inset:-6%;z-index:0;background:var(--olivo-1) center/cover;transform:translate3d(var(--fx,0),var(--fy,0),0);will-change:transform}
-#fondo::after{content:"";position:absolute;inset:0;background:radial-gradient(60% 45% at 50% 50%,transparent 40%,rgba(10,12,6,.55))}
+#fondo::after{content:"";position:absolute;inset:0;background:radial-gradient(55% 35% at 12% 8%,rgba(245,165,198,.2),transparent 70%),radial-gradient(55% 35% at 92% 88%,rgba(245,165,198,.22),transparent 70%),radial-gradient(70% 55% at 50% 50%,transparent 45%,rgba(10,12,6,.5)),linear-gradient(rgba(24,28,16,.42),rgba(24,28,16,.42))}
 #escena{position:fixed;inset:0;height:100vh;height:100dvh;z-index:1;perspective:900px;perspective-origin:50% 50%;overflow:hidden;pointer-events:none}
 #camara,#mundo{position:absolute;left:50%;top:50%;width:0;height:0;transform-style:preserve-3d}
 #mundo{will-change:transform}
@@ -44,20 +44,28 @@ body{margin:0;color:var(--perla);font:400 16px/1.5 var(--f-texto);overflow-x:hid
 .t-cali{font:400 15vmin/1.25 var(--f-cali);text-align:center;white-space:nowrap;padding:0 .2em}
 .t-xv{font:400 42vmin/1 var(--f-caps);text-align:center}
 html.ancho .t-xv{font-size:30vmin}
+html.ancho .t-chico{font-size:2.8vmin}
+.calen .lazo{transform:translate(-50%,-92%);z-index:3}
+.calen .num.t-oro{background-image:linear-gradient(100deg,#7A5A22,#B8923F 35%,#E3C67C 50%,#9C7631 65%,#7A5A22);background-size:100% 100%}
+.lazo{z-index:3}
 html.ancho .t-cali{font-size:13vmin}
 .t-serif{font:400 6vmin/1.35 var(--f-ita);text-align:center;text-wrap:balance}
-.capas{position:relative;transform-style:preserve-3d}
-.capas > span{position:absolute;inset:0;display:block}
-.capas > span.f{position:relative}
+.ext{display:grid;justify-items:center}
+.ext > span{grid-area:1/1}
+.ext .b{color:#6B4F1E;text-shadow:0 .25vmin 0 #8E6D2E,0 .5vmin 0 #7A5A22,0 .75vmin 0 #6B4F1E,0 1vmin 0 #5E4418,0 1.25vmin 0 #4A3412,0 3vmin 4vmin rgba(0,0,0,.5)}
 /* tarjetas */
 .tarjeta{border-radius:4vmin;padding:6vmin 6vmin 5.5vmin;text-align:center;background:linear-gradient(180deg,var(--rosa-v),var(--rosa-v2));
   box-shadow:inset 0 0 0 .35vmin rgba(233,204,135,.75),inset 0 0 0 1.1vmin rgba(255,255,255,.06),0 .5vmin 0 #9C7631,0 1vmin 0 #7A5A22,0 1.6vmin 0 #5E4418,0 6vmin 9vmin -3vmin rgba(0,0,0,.55)}
+.tarjeta{position:relative}
+.tarjeta::before,.tarjeta::after{content:"";position:absolute;left:9%;right:9%;height:2.8vmin;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='15'%3E%3Cpath fill-rule='evenodd' fill='%23F6D9E4' d='M0,15 V9 C0,3 6,0 14,0 C22,0 28,3 28,9 V15 Z M14,5.2 a2.6,2.6 0 1,0 .01,0 Z M5,10.5 a1.3,1.3 0 1,0 .01,0 Z M23,10.5 a1.3,1.3 0 1,0 .01,0 Z'/%3E%3C/svg%3E") repeat-x 0 0/5.2vmin 2.8vmin}
+.tarjeta::before{top:-2.5vmin}.tarjeta::after{bottom:-2.5vmin;transform:scaleY(-1)}
+.lazo{position:absolute;left:50%;top:0;transform:translate(-50%,-58%);filter:drop-shadow(0 .8vmin .8vmin rgba(0,0,0,.35))}
 .tarjeta small{display:block;font:600 3vmin/1 var(--f-texto);letter-spacing:.24em;text-transform:uppercase;color:var(--oro-t)}
 .tarjeta b{display:block;font:400 7.6vmin/1.15 var(--f-serif);color:var(--perla);margin-top:2vmin}
 .tarjeta em{display:block;font-style:normal;font:400 3.8vmin/1.4 var(--f-texto);color:var(--rosa-t);margin-top:1.6vmin}
-.calen{width:100%;border-radius:4vmin;overflow:hidden;background:linear-gradient(180deg,#FFFFFF,#FBEFF4);text-align:center;
+.calen{position:relative;width:100%;border-radius:4vmin;background:linear-gradient(180deg,#FFFFFF,#FBEFF4);text-align:center;
   box-shadow:0 .6vmin 0 #EBD7DF,0 1.2vmin 0 #DEC2CE,0 1.8vmin 0 #CFAFBE,0 2.4vmin 0 #BF9AAB,0 8vmin 10vmin -3vmin rgba(0,0,0,.6)}
-.calen .tope{padding:3.4vmin 0 3vmin;font:600 3.6vmin/1 var(--f-texto);letter-spacing:.3em;text-transform:uppercase;color:#fff;background:linear-gradient(100deg,#B9788A,#D79CAD 45%,#9C6476)}
+.calen .tope{border-radius:4vmin 4vmin 0 0;padding:3.4vmin 0 3vmin;font:600 3.6vmin/1 var(--f-texto);letter-spacing:.3em;text-transform:uppercase;color:#fff;background:linear-gradient(100deg,#B9788A,#D79CAD 45%,#9C6476)}
 .calen .num{display:block;font:400 34vmin/1 var(--f-caps);margin-top:2vmin}
 .calen .dd{display:block;font:400 9vmin/1.2 var(--f-ita);color:#5B6B37}
 .calen .yy{display:block;font:600 3.6vmin/1 var(--f-texto);letter-spacing:.2em;color:#8A6A78;padding:2vmin 0 5vmin}
@@ -165,27 +173,51 @@ html.lite .b3-f{animation:none}
   const florSvg = (p, r = 40) => svg("-50 -50 100 100", flor(0, 0, r, p, Math.random() * 70));
   const hojaSvg = (l = 90, rot = 0) => svg("-10 -30 110 60", hoja(0, 0, l, rot));
   const ramoSvg = (f) => svg("-90 -110 180 140", ramo(0, 0, f));
-  const capas = (txt, cls, n, d) => { let h = ""; for (let i = n; i >= 1; i--) { const k = i / n, c = `rgb(${Math.round(196 - k * 96)},${Math.round(156 - k * 82)},${Math.round(80 - k * 50)})`; h += `<span style="transform:translateZ(${(-i * d).toFixed(2)}vmin);color:${c}">${txt}</span>`; } return `<div class="capas ${cls}">${h}<span class="f t-oro">${txt}</span></div>`; };
+  const capas = (txt, cls) => `<div class="ext ${cls}"><span class="b">${txt}</span><span class="t-oro">${txt}</span></div>`;
   const NC = lite ? 6 : 14;
   const halfH = () => 50 * innerHeight / Math.min(innerWidth, innerHeight), halfW = () => 50 * innerWidth / Math.min(innerWidth, innerHeight);
   const ancho = innerWidth / innerHeight > 1.15;
   const rnd = (a, b) => a + Math.random() * (b - a);
 
   // jardín que pasa volando entre escena y escena (como entrar por las ramas)
-  const PALS = ["rosa", "celeste", "perla", "lila"];
-  const jardin = (z0, n) => { for (let j = 0; j < n; j++) {
+  const PALS = ["rosa", "perla", "rosa", "celeste", "lila"];
+  const jardin = (z0, n) => { n = Math.round(n * .62); for (let j = 0; j < n; j++) {
       const a = rnd(0, 6.28), r = rnd(1.05, 1.6), x = Math.cos(a) * halfW() * r * 1.05, y = Math.sin(a) * halfH() * r * .95, z = z0 - j * (D * .8 / n);
       if (j % 3 === 0) pieza(hojaSvg(rnd(70, 100), 0), { x, y, z, w: rnd(18, 28), rz: a * 57 + rnd(-40, 40), ry: rnd(-30, 30), ini: 1100 });
-      else pieza(florSvg(P[PALS[j % 4]]), { x, y, z, w: rnd(12, 22), rz: rnd(0, 360), ry: rnd(-25, 25), ini: 1100 });
+      else if (j % 5 === 1) pieza(CORA, { x, y, z, w: rnd(5, 8), rz: rnd(-30, 30), ry: rnd(-25, 25), ini: 1100 });
+      else pieza(florSvg(P[PALS[j % 5]]), { x, y, z, w: rnd(12, 22), rz: rnd(0, 360), ry: rnd(-25, 25), ini: 1100 });
     } };
   const brillos = (z0) => { for (let j = 0; j < (lite ? 3 : 6); j++) pieza(svg("-10 -10 20 20", destello(0, 0, 9, "#F6DEA0")), { x: rnd(-halfW(), halfW()) * .9, y: rnd(-halfH(), halfH()) * .9, z: z0 - j * 220, w: rnd(2.5, 5) }); };
   const mari = (L, R, o) => pieza(b3(L, R, `--s:${o.s || 1};--r:${o.r || 0}deg;--d:${o.d || 1.3}s;--fd:${o.fd || 4.6}s`), o);
 
+  // ---------- detalles de niña: lazos de satín, arco de oro con perlas, guirnaldas de perlas, corazones ----------
+  defs.push('<linearGradient id="lazoG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F2C3D0"/><stop offset=".45" stop-color="#C98A9C"/><stop offset="1" stop-color="#8E5466"/></linearGradient><linearGradient id="lazoB" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#B9788A"/><stop offset=".5" stop-color="#F6D3DE"/><stop offset="1" stop-color="#B9788A"/></linearGradient>');
+  const LAZO = svg("-62 -34 124 92", '<g stroke="#7E4A5B" stroke-width="1" stroke-linejoin="round">'
+    + '<path d="M-3,6 C-12,24 -20,38 -30,52 L-17,50 L-10,58 C-5,40 0,22 3,8 Z" fill="url(#lazoG)"/><path d="M3,6 C12,24 20,38 30,52 L17,50 L10,58 C5,40 0,22 -3,8 Z" fill="url(#lazoG)"/>'
+    + '<path d="M0,0 C-18,-30 -58,-30 -56,-2 C-54,22 -22,16 0,2 Z" fill="url(#lazoG)"/><path d="M0,0 C18,-30 58,-30 56,-2 C54,22 22,16 0,2 Z" fill="url(#lazoG)"/>'
+    + '<path d="M-8,-1 C-22,-16 -44,-18 -46,-4" fill="none" stroke="#FFE7EE" stroke-opacity=".6" stroke-width="2.4"/><path d="M8,-1 C22,-16 44,-18 46,-4" fill="none" stroke="#FFE7EE" stroke-opacity=".6" stroke-width="2.4"/>'
+    + '<rect x="-9" y="-9" width="18" height="18" rx="6" fill="url(#lazoB)"/></g><circle cx="0" cy="0" r="3.4" fill="url(#perlaG)"/>');
+  const lazo = (w) => `<div class="lazo" style="width:${w}vmin">${LAZO}</div>`;
+  const CORA = svg("-12 -11 24 22", '<path d="M0,9 C-14,0 -11,-11 -4,-10 C-1,-10 0,-7 0,-6 C0,-7 1,-10 4,-10 C11,-11 14,0 0,9 Z" fill="url(#joyaR)" stroke="#FFE1EC" stroke-opacity=".7" stroke-width=".8"/><circle cx="-4" cy="-5" r="1.6" fill="#fff" opacity=".8"/>');
+  const arcoSvg = (Wv, Hv) => { const W = Wv * 10, H = Hv * 10, r = W / 2, b = 20;
+    const A = (i) => `M${i},${r} A${r - i},${r - i} 0 0 1 ${W - i},${r} L${W - i},${H - i} L${i},${H - i} Z`;
+    let p = ""; const m = b / 2, rr = r - m; let k = 0;
+    const perla = (x, y) => { k++; const j = k % 7 === 0; p += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${j ? 6.2 : 4.2}" fill="url(#${j ? (k % 14 ? "joyaC" : "joyaR") : "perlaG"})"/>`; };
+    const n1 = Math.round(Math.PI * rr / 16); for (let i = 0; i <= n1; i++) { const t = Math.PI + Math.PI * i / n1; perla(r + rr * Math.cos(t), r + rr * Math.sin(t)); }
+    const n2 = Math.round((H - r - m) / 16); for (let i = 1; i <= n2; i++) { const y = r + (H - r - m) * i / n2; perla(m, y); perla(W - m, y); }
+    return svg(`-10 -10 ${W + 20} ${H + 20}`, `<path d="${A(b)}" fill="rgba(14,17,9,.5)"/>`
+      + `<path d="${A(0)} ${A(b)}" fill-rule="evenodd" fill="#4A3412" transform="translate(3 7)"/><path d="${A(0)} ${A(b)}" fill-rule="evenodd" fill="url(#oro)" stroke="#7A5A22" stroke-width="1.5"/>` + p); };
+  const guirnalda = (Wv) => { const W = Wv * 10, h = 70; let p = `<path d="M0,0 Q${W / 2},${h * 2} ${W},0" fill="none" stroke="#C9A14F" stroke-opacity=".6" stroke-width="1.4"/>`;
+    const n = Math.round(W / 22); for (let i = 0; i <= n; i++) { const t = i / n, x = W * t, y = 2 * (1 - t) * t * h * 2; const j = i % 6 === 3; p += `<circle cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${j ? 7 : 5}" fill="url(#${j ? "joyaR" : "perlaG"})"/>`; }
+    return svg(`-30 -40 ${W + 60} ${h + 80}`, p + `<g transform="translate(0 -6) scale(.42)">${LAZO.replace(/<\/?svg[^>]*>/g, "")}</g><g transform="translate(${W} -6) scale(.42)">${LAZO.replace(/<\/?svg[^>]*>/g, "")}</g>`); };
+  const guir = (z, y) => pieza(guirnalda(ancho ? 96 : 92), { y: y ?? -halfH() * .8, z: z + 30, w: ancho ? 96 : 92, txt: 1, fin: 180 });
+
   // 0 · portada
   let z = 0;
-  pieza(`<div class="t-chico">Te invito a celebrar mis</div>`, { y: ancho ? -39 : -halfH() * .42, z, txt: 1 });
-  pieza(capas("XV", "t-xv", NC, .45), { y: ancho ? -17 : -halfH() * .12, z, txt: 1 });
-  pieza(capas("Nayomi", "t-cali", NC, .3), { y: ancho ? 15 : halfH() * .22, z, txt: 1 });
+  pieza(arcoSvg(ancho ? 86 : 88, ancho ? 98 : Math.min(168, halfH() * 1.56)), { y: 0, z: z - 70, w: ancho ? 86 : 88, txt: 1, fin: 160 });
+  pieza(`<div class="t-chico">Te invito a celebrar mis</div>`, { y: ancho ? -29 : -halfH() * .35, z, txt: 1 });
+  pieza(capas("XV", "t-xv", NC, .45), { y: ancho ? -10 : -halfH() * .1, z, txt: 1 });
+  pieza(capas("Nayomi", "t-cali", NC, .3), { y: ancho ? 17 : halfH() * .22, z, txt: 1 });
   pieza(`<div class="t-chico" style="color:var(--perla);letter-spacing:.34em">Cholan Ramos</div>`, { y: ancho ? 33 : halfH() * .44, z, txt: 1 });
   mari("rosa", "celeste", { x: -halfW() * .62, y: -halfH() * .55, z: z + 80, s: .9, r: -24, txt: 1, fin: 200 });
   mari("celeste", "lila", { x: halfW() * .6, y: halfH() * .58, z: z + 40, s: .75, r: 20, d: 1.5, txt: 1, fin: 200 });
@@ -194,7 +226,7 @@ html.lite .b3-f{animation:none}
   jardin(z - 250, lite ? 8 : 16); brillos(z - 300);
 
   // 1 · la corona
-  z = -D;
+  z = -D; guir(z);
   { const N = 14; let h = ""; const R0 = 5.2 * N / (2 * Math.PI) * .985;
     for (let i = 0; i < N; i++) { const alto = i % 2 === 0, top = alto ? 4 : 30, joya = alto ? (i % 4 === 0 ? "joyaR" : "joyaC") : "perlaG";
       const pz = (g, osc) => `<svg class="${osc ? "b" : "f"}" viewBox="0 0 50 98"><path d="M-1,74 C10,70 17,${top + 30} 25,${top} C33,${top + 30} 40,70 51,74 L51,96 L-1,96 Z" fill="url(#${g})" stroke="#7A5A22" stroke-width=".7"/><rect x="-1" y="78" width="52" height="14" fill="${osc ? "#5E4418" : "url(#oro)"}" stroke="#7A5A22" stroke-width=".6"/>${osc ? "" : `<circle cx="25" cy="${top - 1}" r="${alto ? 5.6 : 4}" fill="url(#${joya})" stroke="#7A5A22" stroke-width=".6"/><circle cx="12" cy="85" r="2.4" fill="url(#perlaG)"/><circle cx="38" cy="85" r="2.4" fill="url(#perlaG)"/><circle cx="25" cy="85" r="3.2" fill="url(#${i % 3 ? "joyaC" : "joyaR"})"/>`}</svg>`;
@@ -205,27 +237,27 @@ html.lite .b3-f{animation:none}
   jardin(z - 250, lite ? 8 : 16); brillos(z - 200);
 
   // 2 · el versículo
-  z = -2 * D;
-  pieza(`<div class="tarjeta" style="padding:8vmin 7vmin"><small>Isaías 62:3</small><b style="font-family:var(--f-ita);font-size:6.6vmin;line-height:1.35;margin-top:4vmin">«Serás corona de gloria en la mano de Jehová, y diadema de reino en la mano del Dios tuyo.»</b></div>`, { z, w: ancho ? 70 : 84, rx: 4, txt: 1 });
+  z = -2 * D; guir(z);
+  pieza(`<div class="tarjeta" style="padding:10vmin 7vmin 8vmin">${lazo(26)}<small>Isaías 62:3</small><b style="font-family:var(--f-ita);font-size:6.6vmin;line-height:1.35;margin-top:4vmin">«Serás corona de gloria en la mano de Jehová, y diadema de reino en la mano del Dios tuyo.»</b></div>`, { z, w: ancho ? 70 : 84, rx: 4, txt: 1 });
   mari("rosa", "rosa", { x: -halfW() * .55, y: -halfH() * .56, z: z + 70, s: .7, r: -16, d: 1.2, txt: 1, fin: 200 });
   mari("celeste", "celeste", { x: halfW() * .58, y: halfH() * .55, z: z + 30, s: .65, r: 14, d: 1.4, txt: 1, fin: 200 });
   jardin(z - 250, lite ? 8 : 16); brillos(z - 300);
 
   // 3 · la fecha
-  z = -3 * D;
+  z = -3 * D; guir(z);
   pieza(`<div class="t-chico">Guarda la fecha</div>`, { y: -halfH() * .62, z, txt: 1 });
-  pieza(`<div class="calen"><div class="tope">Noviembre</div><span class="num t-oro">07</span><span class="dd">Sábado</span><span class="yy">2026 · 8:00 p. m.</span></div>`, { z, w: ancho ? 48 : 64, ry: -14, rx: 8, txt: 1 });
+  pieza(`<div class="calen">${lazo(30)}<div class="tope">Noviembre</div><span class="num t-oro">07</span><span class="dd">Sábado</span><span class="yy">2026 · 8:00 p. m.</span></div>`, { z, w: ancho ? 48 : 64, ry: -14, rx: 8, txt: 1 });
   jardin(z - 250, lite ? 8 : 16); brillos(z - 250);
 
   // 4 · los detalles
   z = -4 * D;
   const det = [["Hora", "8:00 p. m.", "Sábado 7 de noviembre"], ["Lugar", "Jr. San Juan Bautista 363", "2.ª etapa San Juan Bautista, Comas<br>Ref.: Incas Universitaria"], ["Vestimenta", "Sport elegante", ""]];
-  det.forEach(([a, b, c], i) => pieza(`<div class="tarjeta" style="padding:5vmin 5vmin 4.5vmin"><small>${a}</small><b>${b}</b>${c ? `<em>${c}</em>` : ""}</div>`,
+  det.forEach(([a, b, c], i) => pieza(`<div class="tarjeta" style="padding:7vmin 5vmin 4.5vmin">${lazo(17)}<small>${a}</small><b>${b}</b>${c ? `<em>${c}</em>` : ""}</div>`,
     ancho ? { x: (i - 1) * 50, z: z - Math.abs(i - 1) * 90, w: 45, ry: (1 - i) * 16, txt: 1 } : { y: (i - 1) * halfH() * .62, z: z - i * 60, w: 82, ry: (i % 2 ? -1 : 1) * 8, txt: 1 }));
   jardin(z - 250, lite ? 8 : 16); brillos(z - 250);
 
   // 5 · final
-  z = -5 * D;
+  z = -5 * D; guir(z);
   pieza(capas("¡Te espero!", "t-cali", NC, .3), { y: -halfH() * .34, z, fin: 99999, ini: 1250 });
   pieza(`<div class="t-serif" style="font-size:6.2vmin">Sábado 7 de noviembre · 8:00 p. m.<br><span style="font-size:.78em;color:var(--rosa-t)">Jr. San Juan Bautista 363, Comas</span></div>`, { y: halfH() * .02, z, w: 86, fin: 99999, ini: 1250 });
   pieza(`<div class="t-cali" style="font-size:11vmin;color:var(--perla)">Con cariño, Nayomi</div>`, { y: halfH() * .3, z, fin: 99999, ini: 1250 });
@@ -249,9 +281,9 @@ html.lite .b3-f{animation:none}
   const cuadro = (now) => {
     const dt = Math.min(.05, (now - last) / 1000); last = now; T += dt;
     const tz = camDe(prog());
-    cz = quieto ? tz : cz + (tz - cz) * Math.min(1, dt * 5.5);
+    cz = quieto ? tz : cz + (tz - cz) * Math.min(1, dt * 10);
     if (Math.abs(tz - cz) < .3) cz = tz;
-    if (!puntero) { tmx = Math.sin(T * .4) * .18; tmy = Math.cos(T * .33) * .12; }
+    if (!puntero) { tmx = 0; tmy = 0; }
     mx += (tmx - mx) * .05; my += (tmy - my) * .05;
     mundo.style.transform = `translate3d(0,0,${cz.toFixed(1)}px)`;
     camara.style.transform = `rotateX(${(-my * 7).toFixed(2)}deg) rotateY(${(mx * 10).toFixed(2)}deg)`;
