@@ -140,7 +140,7 @@ body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif
     const wU = meas.measureText(txt).width / 10 + o.t * .6 + (o.esp ? o.esp * o.t : 0), hU = o.t * (o.fam === "cali" ? 1.55 : 1.3) + (o.oro ? o.t * .14 : 0);
     const [c, x] = lienzo(wU, hU); fnt(x, o.peso || 400, o.t, fam, o.esp || 0);
     x.textAlign = "center"; x.textBaseline = "middle"; const cx0 = wU / 2 + (o.esp ? o.esp * o.t / 2 : 0), cy0 = hU / 2 - (o.oro ? o.t * .05 : 0);
-    if (o.oro) { const n = 7; for (let i = n; i >= 1; i--) { const k = i / n; x.fillStyle = `rgb(${Math.round(150 - k * 70)},${Math.round(112 - k * 52)},${Math.round(48 - k * 30)})`; ft(x, txt, cx0, cy0 + i * o.t * .016); }
+    if (o.oro) { const n = Math.max(7, Math.round(o.t * .7)); for (let i = n; i >= 1; i--) { const k = i / n; x.fillStyle = `rgb(${Math.round(150 - k * 70)},${Math.round(112 - k * 52)},${Math.round(48 - k * 30)})`; ft(x, txt, cx0, cy0 + i * o.t * .112 / n); }
       x.save(); sombra(x, "rgba(60,90,40,.35)", o.t * .2, o.t * .1); x.fillStyle = "#6B4F1E"; ft(x, txt, cx0, cy0); x.restore();
       x.save(); x.translate(cx0, cy0); x.fillStyle = oroGrad(x, wU, -o.t * .6, o.t * .6); ft(x, txt, 0, 0); x.restore(); }
     else { x.save(); sombra(x, "rgba(255,255,255,.75)", o.t * .25, 0); x.fillStyle = o.col || "#34502A"; ft(x, txt, cx0, cy0); x.restore(); }
@@ -228,12 +228,14 @@ body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif
   const brilloT = textura(await deSvg("-10 -10 20 20", '<path d="M0,-10 L2.2,-2.2 10,0 2.2,2.2 0,10 -2.2,2.2 -10,0 -2.2,-2.2 Z" fill="#FFF1C4"/>', 4, 4));
   const petaloT = await Promise.all([["#FFE4EE", "#E9A2B8"], ["#FFFFFF", "#F1D3DF"], ["#F4FBE8", "#B9DE92"], ["#FFF3C4", "#C9A14F"]].map(([a1, b1]) => deSvg("-12 -12 24 24", `<defs><linearGradient id="pg${a1.slice(1)}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a1}"/><stop offset="1" stop-color="${b1}"/></linearGradient></defs><path d="M0,-11 C7,-9 9,2 0,11 C-9,2 -7,-9 0,-11 Z" fill="url(#pg${a1.slice(1)})"/>`, 3.4, 3.4).then(textura)));
   // mariposa: un ala (se usa dos veces, una al revés)
-  const alas = {}; for (const k of ["rosa", "celeste", "lila", "perla"]) alas[k] = textura(await deSvg("0 -55 75 110", ala(k, false), 9, 13.2));
+  GW.lima = [rgc(P.lima, 72, 4), rgc([P.lima[0], P.lima[0], P.lima[1], P.lima[2]], 60, 4)];
+  const alas = {}; for (const k of ["rosa", "celeste", "lila", "perla", "lima"]) alas[k] = textura(await deSvg("0 -55 75 110", ala(k, false), 9, 13.2));
   const cuerpoT = textura(await deSvg("-4 -20 8 40", '<ellipse cx="0" cy="2" rx="3" ry="16" fill="#3B2A33"/><path d="M-1,-13 C-4,-28 -10,-34 -16,-36 M1,-13 C4,-28 10,-34 16,-36" stroke="#3B2A33" stroke-width="1.3" fill="none"/>', 1.6, 8));
+  const hw = HW(), hh = HH();
   const maris = [];
+  const vuela = (L, R2, z1, o = {}) => { const m = mari(L, R2, Object.assign({ z: z1, s: rnd(.55, .8), f: rnd(9, 12), tilt: 40 }, o)); m.x0 = o.x0 ?? rnd(-.4, .4) * hw; m.y0 = o.y0 ?? rnd(-.3, .3) * hh; m.vuela = { v: rnd(.18, .3), ax: hw * rnd(.55, .8), ay: hh * rnd(.25, .45) }; return m; };
   const mari = (L, R, o) => { const m = Object.assign({ x: 0, y: 0, z: 0, s: 1, r: 0, tilt: 50, f: rnd(5, 8), ph: rnd(0, 6), ini: 250, sal: 10 }, o, { L: alas[L], R: alas[R] }); maris.push(m); return m; };
 
-  const hw = HW(), hh = HH();
   // jardín que pasa volando
   const jardin = (z0, n) => { n = lite ? Math.round(n * .5) : n; for (let j = 0; j < n; j++) {
     let x, y; do { x = rnd(-1.15, 1.15) * hw; y = rnd(-1.1, 1.1) * hh; } while (Math.abs(x) < hw * .55 && Math.abs(y) < hh * .5);
@@ -256,13 +258,42 @@ body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif
     const c = await deSvg(`-10 -10 ${W + 20} ${H + 20}`, `<path d="${A(b)}" fill="rgba(255,255,250,.45)"/><path d="${A(0)} ${A(b)}" fill-rule="evenodd" fill="url(#oro)" stroke="#7A5A22" stroke-width="1.5"/>` + p, arcoW + 2, arcoH + 2);
     const tb = textura(banda); for (let i = (lite ? 2 : 4); i >= 1; i--) obj(tb, { z: z - 8 - i * .9, w: arcoW + 2, h: arcoH + 2, k: [.6 - i * .05, .48 - i * .05, .3 - i * .04], sal: 16 });
     obj(textura(c), { z: z - 8, w: arcoW + 2, h: arcoH + 2, sal: 16 }); }
-  desde(texto("TE INVITO A CELEBRAR MIS", { t: ancho ? 2.8 : 3.3, peso: 600, esp: .26, col: "#B5577A" }), { y: ancho ? 29 : hh * .35, z, sal: 30 });
-  desde(texto("XV", { t: ancho ? 30 : 40, fam: "caps", oro: 1 }), { y: ancho ? 10 : hh * .1, z: z + 2, sal: 30 });
-  const nom = desde(texto("Nayomi", { t: ancho ? 13 : 15, fam: "cali", oro: 1 }), { y: ancho ? -17 : -hh * .22, z: z + 2, sal: 30, nombre: 1 });
-  desde(texto("CHOLAN RAMOS", { t: ancho ? 3 : 3.4, peso: 600, esp: .34 }), { y: ancho ? -33 : -hh * .44, z, sal: 30 });
+  desde(texto("TE INVITO A CELEBRAR MIS", { t: ancho ? 2.8 : 3.3, peso: 600, esp: .26, col: "#B5577A" }), { y: ancho ? 30.5 : hh * .45, z, sal: 30 });
+  let ramT;
+  { // XV con volumen, tiara, enredadera de flores, mariposas posadas y brillos
+    const T0 = ancho ? 28 : 44, Y0 = ancho ? 4 : hh * .06, xv = texto("XV", { t: T0, fam: "caps", oro: 1 });
+    grueso(xv, { y: Y0, z: z + 2, sal: 30, canto: [.62, .5, .32], b: .7 }, lite ? 2 : 4, .3);
+    const tiara = `<g transform="translate(0 6)"><path d="M-96,22 L-76,-8 L-58,14 L-35,-24 L-15,10 L0,-44 L15,10 L35,-24 L58,14 L76,-8 L96,22 C60,31 -60,31 -96,22 Z" fill="url(#oro)" stroke="#7A5A22" stroke-width="1.6" stroke-linejoin="round"/><path d="M-80,16 C-40,22 40,22 80,16" fill="none" stroke="#FFF6D8" stroke-opacity=".7" stroke-width="1.6"/>` +
+      [[-76, -8, 4.6, "perlaG"], [76, -8, 4.6, "perlaG"], [-35, -24, 6.4, "joyaV"], [35, -24, 6.4, "joyaV"], [0, -44, 9.5, "joyaR"], [-15, 10, 3.8, "joyaR"], [15, 10, 3.8, "joyaR"], [-58, 14, 3.4, "joyaV"], [58, 14, 3.4, "joyaV"]].map(([x, y, r, g]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#${g})" stroke="#7A5A22" stroke-width="1"/><circle cx="${x - r * .3}" cy="${y - r * .35}" r="${r * .3}" fill="#fff" opacity=".85"/>`).join("") +
+      [-84, -63, -42, -21, 0, 21, 42, 63, 84].map((x) => `<circle cx="${x}" cy="${(25 - Math.abs(x) * .05).toFixed(1)}" r="3" fill="url(#perlaG)"/>`).join("") + `<path d="M0,-66 l2.6,7.4 7.4,2.6 -7.4,2.6 -2.6,7.4 -2.6,-7.4 -7.4,-2.6 7.4,-2.6 Z" fill="#FFF6D8"/></g>`;
+    const tw2 = T0 * .78; desde({ c: await deSvg("-104 -76 208 116", `<defs><linearGradient id="joyaV" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#F1FBE2"/><stop offset=".5" stop-color="#A9D978"/><stop offset="1" stop-color="#55913A"/></linearGradient></defs>` + tiara, tw2, tw2 * 116 / 208), w: tw2, h: tw2 * 116 / 208 }, { y: Y0 + T0 * .6, z: z + 3, sal: 30, mece: 1 });
+    // enredadera: un ramito largo de flores rosadas, blancas y lima con hojas
+    const ram = (esp) => { let p = ""; const H = (x, y, l, r) => p += hoja(x, y, l, r); const F = (x, y, r, k, rot) => p += flor(x, y, r, P[k], rot);
+      H(-118, 18, 46, 200); H(-96, -12, 38, 235); H(104, 20, 48, -18); H(86, -14, 36, -55); H(-40, 34, 34, 130); H(36, 36, 34, 50); H(-12, -40, 30, 255); H(18, -38, 28, -80);
+      F(-74, 14, 22, "lima", 10); F(72, 12, 24, "perla", 40); F(-36, -10, 26, "perla", 70); F(40, -8, 24, "lima", 15); F(0, 6, 36, "rosa", 0); F(-104, 30, 13, "rosa", 30); F(106, 34, 14, "rosa", 0); F(-14, 34, 14, "lima", 50); F(20, 36, 12, "rosa", 20);
+      p += capullo(-128, 2, 11, P.rosa, -70) + capullo(128, 4, 11, P.rosa, 70);
+      [[-56, 32], [58, 32], [-90, -4], [92, -2], [-22, -28], [26, -26]].forEach(([x, y]) => p += `<circle cx="${x}" cy="${y}" r="3.6" fill="url(#perlaG)"/>`);
+      p += destello(-60, -26, 8, "#FFF1C4") + destello(64, -28, 7, "#FFF1C4") + destello(0, -36, 6, "#FFF1C4"); return p; };
+    const rw = T0 * 1.15; ramT = textura(await deSvg("-140 -62 280 112", ram(), rw, rw * 112 / 280));
+    obj(ramT, { y: Y0 - T0 * .38, z: z + 5, w: rw, h: rw * 112 / 280, sal: 30, b: 1 });
+    // flores sueltas sobre las puntas de las letras
+    obj(floresT[0], { x: -T0 * .56, y: Y0 + T0 * .34, z: z + 4, w: T0 * .2, h: T0 * .2, rz: .4, sal: 30 });
+    obj(floresT[2], { x: -T0 * .44, y: Y0 + T0 * .4, z: z + 4.2, w: T0 * .13, h: T0 * .13, rz: 1, sal: 30 });
+    obj(floresT[1], { x: T0 * .6, y: Y0 + T0 * .36, z: z + 4, w: T0 * .16, h: T0 * .16, rz: 2, sal: 30 });
+    obj(hojaT, { x: -T0 * .68, y: Y0 + T0 * .3, z: z + 3.8, w: T0 * .22, h: T0 * .12, rz: 200 * RAD, sal: 30 });
+    obj(hojaT, { x: T0 * .72, y: Y0 + T0 * .32, z: z + 3.8, w: T0 * .2, h: T0 * .11, rz: -20 * RAD, sal: 30 });
+    // mariposas posadas en las letras (aletean despacito)
+    mari("rosa", "rosa", { x: T0 * .52, y: Y0 + T0 * .44, z: z + 6, s: ancho ? .55 : .7, r: -28, f: 3.2, tilt: 25, amp: 32, sal: 30 });
+    mari("lima", "perla", { x: -T0 * .62, y: Y0 - T0 * .12, z: z + 6, s: ancho ? .42 : .52, r: 24, f: 2.6, tilt: 25, amp: 32, sal: 30 });
+    // brillos que titilan alrededor
+    [[-.8, .55], [.85, .2], [-.3, .78], [.4, -.42], [-.72, -.36], [.05, .95], [.95, .7]].forEach(([a1, b1], i) => obj(brilloT, { x: a1 * T0 * .78, y: Y0 + b1 * T0 * .55, z: z + 4.5, w: 2.6 + (i % 3), sal: 30, tw: 1.4 + i * .3 }));
+  }
+  const nom = desde(texto("Nayomi", { t: ancho ? 13 : 15, fam: "cali", oro: 1 }), { y: ancho ? -21 : -hh * .28, z: z + 2, sal: 30, nombre: 1 });
+  desde(texto("CHOLAN RAMOS", { t: ancho ? 3 : 3.4, peso: 600, esp: .34 }), { y: ancho ? -36 : -hh * .48, z, sal: 30 });
   const ramoC = await deSvg("-90 -110 180 140", ramo(0, 0, false), 46, 36), ramoC2 = await deSvg("-90 -110 180 140", ramo(0, 0, true), 46, 36);
   desde({ c: ramoC, w: 46, h: 36 }, { x: -hw * .78, y: -hh * .82, z: z + 10, sal: 12 }); desde({ c: ramoC2, w: 46, h: 36 }, { x: hw * .78, y: -hh * .82, z: z + 10, sal: 12 });
-  mari("rosa", "celeste", { x: -hw * .62, y: hh * .55, z: z + 8, s: .95, r: 24 }); mari("celeste", "lila", { x: hw * .6, y: -hh * .58, z: z + 6, s: .8, r: -20 });
+  mari("rosa", "celeste", { x: -hw * .62, y: hh * .55, z: z + 8, s: .95, r: 24 }); mari("lima", "rosa", { x: hw * .6, y: -hh * .58, z: z + 6, s: .8, r: -20 });
+  vuela("rosa", "rosa", z + 14, { s: .7 });
   jardin(z, 14);
 
   // guirnalda de perlas con lacitos
@@ -277,10 +308,13 @@ body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif
     const tA = textura(await deSvg("0 0 50 98", pz(0, 0), 8, 15.7)), tB = textura(await deSvg("0 0 50 98", pz(0, 1), 8, 15.7));
     const esc = ancho ? 1.5 : 1.9, pw = 5.2 * esc, ph = 10.2 * esc, R = pw * 14 / (2 * Math.PI) * .985;
     for (let i = 0; i < 14; i++) obj(i % 2 ? tB : tA, { corona: { i, R, y: hh * .14 + ph * .2 }, z, w: pw * 1.02, h: ph, b: .5, sal: 20 }); }
+  obj(ramT, { y: hh * .02, z: z + 3, w: (ancho ? 46 : 60), h: (ancho ? 46 : 60) * .4, sal: 24, b: 1 }); 
   desde(texto("Una noche para", { t: 7.2, fam: "ita" }), { y: -hh * .27, z, sal: 26 });
   desde(texto("una princesa", { t: 7.2, fam: "ita" }), { y: -hh * .27 - 8.6, z, sal: 26 });
-  mari("perla", "rosa", { x: hw * .55, y: hh * .5, z: z + 6, s: .85, r: -22 });
-  jardin(z, 14);
+  mari("perla", "rosa", { x: hw * .55, y: hh * .5, z: z + 6, s: .85, r: -22 }); mari("lima", "lima", { x: -hw * .6, y: hh * .62, z: z + 5, s: .6, r: 18 });
+  desde({ c: ramoC, w: 40, h: 31.3 }, { x: -hw * .84, y: -hh * .88, z: z + 10, sal: 12 }); desde({ c: ramoC2, w: 40, h: 31.3 }, { x: hw * .84, y: -hh * .88, z: z + 10, sal: 12 });
+  vuela("lima", "rosa", z + 12); vuela("rosa", "perla", z + 4);
+  jardin(z, 16);
 
 
   // 2 · recuerdos: sus fotos de pequeña
@@ -290,22 +324,29 @@ body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif
     const fw = ancho ? 30 : 42;
     grueso(marco(i1, fw, "Pequeñita y soñadora"), ancho ? { x: -22, y: -9, z: z - 4, rz: 4 * RAD, ry: 10 * RAD, sal: 22, gira: 1, balancea: 1 } : { x: -hw * .3, y: hh * .2, z: z - 4, rz: 5 * RAD, ry: 10 * RAD, sal: 22, gira: 1, balancea: 1 }, lite ? 2 : 4, .7);
     grueso(marco(i2, fw, "Mis primeras aventuras"), ancho ? { x: 22, y: -12, z: z + 2, rz: -4 * RAD, ry: -10 * RAD, sal: 22, gira: 1, balancea: 1 } : { x: hw * .3, y: -hh * .38, z: z + 2, rz: -5 * RAD, ry: -10 * RAD, sal: 22, gira: 1, balancea: 1 }, lite ? 2 : 4, .7); }
-  mari("rosa", "celeste", { x: hw * .62, y: hh * .42, z: z + 9, s: .7, r: -18 }); mari("lila", "lila", { x: -hw * .62, y: -hh * .62, z: z + 6, s: .65, r: 16 });
-  jardin(z, 14);
+  mari("rosa", "celeste", { x: hw * .62, y: hh * .42, z: z + 9, s: .7, r: -18 }); mari("lima", "lima", { x: -hw * .62, y: -hh * .62, z: z + 6, s: .65, r: 16 });
+  desde({ c: ramoC, w: 34, h: 26.6 }, { x: -hw * .86, y: -hh * .9, z: z + 12, sal: 12 }); desde({ c: ramoC2, w: 34, h: 26.6 }, { x: hw * .86, y: -hh * .9, z: z + 12, sal: 12 });
+  vuela("rosa", "rosa", z + 13); vuela("perla", "lima", z + 6);
+  jardin(z, 16);
 
   // 3 · el versículo
   z = -3 * D; guir(z);
   desde({ c: ramoC, w: 38, h: 29.7 }, { x: -hw * .82, y: -hh * .86, z: z + 10, sal: 12 }); desde({ c: ramoC2, w: 38, h: 29.7 }, { x: hw * .82, y: -hh * .86, z: z + 10, sal: 12 });
   grueso(tarjeta(ancho ? 70 : 84, [{ t: "ISAÍAS 62:3", tam: 2.9, peso: 600, esp: .24, col: "#9C7631", una: 1, gap: 3 }, { t: "«Serás corona de gloria en la mano de Jehová, y diadema de reino en la mano del Dios tuyo.»", tam: ancho ? 5.6 : 6.4, fam: "ita", lh: 1.32 }], 26), { z, rx: -4 * RAD, sal: 24, gira: 1 }, lite ? 2 : 4, .7);
-  mari("rosa", "rosa", { x: -hw * .55, y: hh * .56, z: z + 7, s: .75, r: 16 }); mari("celeste", "celeste", { x: hw * .58, y: -hh * .55, z: z + 3, s: .7, r: -14 });
-  jardin(z, 14);
+  mari("rosa", "rosa", { x: -hw * .55, y: hh * .56, z: z + 7, s: .75, r: 16 }); mari("lima", "perla", { x: hw * .58, y: -hh * .55, z: z + 3, s: .7, r: -14 });
+  vuela("lima", "lima", z - 8); vuela("rosa", "perla", z - 14);
+  jardin(z, 16);
 
+  obj(ramT, { y: ancho ? -42 : -hh * .43, z: z + 4, w: (ancho ? 50 : 66), h: (ancho ? 50 : 66) * .4, sal: 24, b: 1 }); 
   // 4 · la fecha
   z = -4 * D; guir(z);
-  mari("celeste", "rosa", { x: -hw * .62, y: hh * .38, z: z + 8, s: .75, r: 18 }); mari("perla", "lila", { x: hw * .6, y: -hh * .6, z: z + 5, s: .65, r: -14 });
+  mari("celeste", "rosa", { x: -hw * .62, y: hh * .38, z: z + 8, s: .75, r: 18 }); mari("perla", "lima", { x: hw * .6, y: -hh * .6, z: z + 5, s: .65, r: -14 });
+  obj(ramT, { y: ancho ? -42 : -hh * .5, z: z + 6, w: (ancho ? 46 : 62), h: (ancho ? 46 : 62) * .4, sal: 24, b: 1 }); 
   desde(texto("GUARDA LA FECHA", { t: 3.4, peso: 600, esp: .26, col: "#B5577A" }), { y: hh * .62, z, sal: 26 });
   grueso(calendario(ancho ? 46 : 60), { z, ry: -14 * RAD, rx: -8 * RAD, sal: 24, gira: 1, balancea: 1 }, lite ? 3 : 5, .9);
-  jardin(z, 14);
+  desde({ c: ramoC, w: 40, h: 31.3 }, { x: -hw * .84, y: -hh * .88, z: z + 10, sal: 12 }); desde({ c: ramoC2, w: 40, h: 31.3 }, { x: hw * .84, y: -hh * .88, z: z + 10, sal: 12 });
+  vuela("rosa", "lima", z - 8); vuela("perla", "rosa", z - 14);
+  jardin(z, 16);
 
   // 5 · los detalles
   z = -5 * D;
@@ -313,21 +354,23 @@ body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif
   const det = [["HORA", "8:00 p. m.", "Sábado 7 de noviembre"], ["LUGAR", "Jr. San Juan Bautista 363", "2.ª etapa San Juan Bautista, Comas · Ref.: Incas Universitaria"], ["VESTIMENTA", "Sport elegante", ""]];
   det.forEach(([a1, b1, c1], i) => { const filas = [{ t: a1, tam: 2.7, peso: 600, esp: .24, col: "#9C7631", una: 1, gap: 2 }, { t: b1, tam: 7, fam: "serif", lh: 1.12, gap: c1 ? 2 : 0 }]; if (c1) filas.push({ t: c1, tam: 3.5, col: "#B5577A", lh: 1.35 });
     grueso(tarjeta(ancho ? 46 : 80, filas, 17), ancho ? { x: (i - 1) * 50, z: z - Math.abs(i - 1) * 14, ry: (1 - i) * 16 * RAD, sal: 22, gira: 1 } : { y: (1 - i) * hh * .62, z: z - i * 8, ry: (i % 2 ? -1 : 1) * 8 * RAD, sal: 22, gira: 1 }, lite ? 2 : 4, .7); });
-  jardin(z, 14);
+  vuela("lima", "rosa", z + 14); vuela("rosa", "rosa", z + 22, { s: .55 });
+  jardin(z, 16);
 
   // 6 · final
   z = -6 * D; guir(z);
   desde(texto("¡Te espero!", { t: 15, fam: "cali", oro: 1 }), { y: hh * .34, z: z + 2, sal: -99 });
   desde(texto("Sábado 7 de noviembre · 8:00 p. m.", { t: ancho ? 5 : 5.4, fam: "ita" }), { y: hh * .04, z, sal: -99 });
   desde(texto("Jr. San Juan Bautista 363, Comas", { t: ancho ? 4 : 4.4, fam: "ita", col: "#B5577A" }), { y: -hh * .04, z, sal: -99 });
+  if (ancho) { obj(ramT, { x: -hw * .76, y: -hh * .05, z: z + 2, w: 44, h: 17.6, sal: -99, b: 1 }); obj(ramT, { x: hw * .76, y: -hh * .05, z: z + 2, w: 44, h: 17.6, sal: -99, b: 1 }); } else obj(ramT, { y: -hh * .43, z: z + 2, w: 62, h: 24.8, sal: -99, b: 1 });
   desde(texto("Con cariño, Nayomi", { t: 10, fam: "cali" }), { y: -hh * .26, z, sal: -99 });
   { const dias = Math.ceil((new Date("2026-11-07T20:00:00-05:00") - Date.now()) / 864e5); desde(texto(dias > 1 ? `FALTAN ${dias} DÍAS` : dias === 1 ? "¡ES MAÑANA!" : "¡HOY ES EL GRAN DÍA!", { t: 3.2, peso: 600, esp: .3, col: "#9C7631" }), { y: hh * .56, z, sal: -99 }); }
   desde({ c: ramoC, w: 48, h: 37.6 }, { x: -hw * .8, y: -hh * .86, z: z + 10, sal: -99 }); desde({ c: ramoC2, w: 48, h: 37.6 }, { x: hw * .8, y: -hh * .86, z: z + 10, sal: -99 });
-  mari("rosa", "celeste", { x: -hw * .6, y: hh * .62, z: z + 6, s: .9, r: 20, sal: -99 }); mari("lila", "rosa", { x: hw * .62, y: hh * .7, z: z + 3, s: .75, r: -18, sal: -99 });
+  mari("rosa", "celeste", { x: -hw * .6, y: hh * .62, z: z + 6, s: .9, r: 20, sal: -99 }); mari("lima", "rosa", { x: hw * .62, y: hh * .7, z: z + 3, s: .75, r: -18, sal: -99 }); vuela("rosa", "perla", z + 8, { sal: -99 }); vuela("lima", "lima", z + 4, { sal: -99 });
   objs.forEach((o) => { if (!o.h) o.h = o.w; });
 
   // pétalos que caen dando vueltas en 3D por todo el viaje
-  const petalos = []; for (let i = 0; i < (lite ? 18 : 44); i++) petalos.push({ t: petaloT[i % 4], x: rnd(-1, 1) * hw, y: rnd(-1, 1) * hh, z: rnd(-6 * D - 120, 60), vx: rnd(-1, 1), vy: rnd(-5, -2.5), rx: rnd(0, 6), ry: rnd(0, 6), sx: rnd(1, 2.6), sy: rnd(.8, 2), s: rnd(2.2, 3.6) });
+  const petalos = []; for (let i = 0; i < (lite ? 22 : 56); i++) petalos.push({ t: i % 4 === 1 ? floresT[i % 5] : petaloT[i % 4], x: rnd(-1, 1) * hw, y: rnd(-1, 1) * hh, z: rnd(-6 * D - 120, 60), vx: rnd(-1, 1), vy: rnd(-5, -2.5), rx: rnd(0, 6), ry: rnd(0, 6), sx: rnd(1, 2.6), sy: rnd(.8, 2), s: rnd(2.2, 3.6) });
 
   /* ================= cámara ================= */
   const N = 7, barra = $("barra"); barra.innerHTML = "<i></i>".repeat(N); const puntos = [...barra.children];
@@ -367,12 +410,12 @@ body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     lista.length = 0;
     for (const o of objs) { const d = camZ - o.z; if (d < 1 || d > o.ini) continue; const a = vis(d, o) * o.a; if (a <= .01) continue; let ds = d; if (o.corona) ds = d - o.corona.R * Math.cos(o.corona.i * Math.PI * 2 / 14 + TT * .45); lista.push([ds, o, a, 0, d]); }
-    for (const m of maris) { const d = camZ - m.z; if (d < 1 || d > m.ini) continue; const a = vis(d, m); if (a > .01) lista.push([d, m, a, 1]); }
+    for (const m of maris) { const d = camZ - m.z; if (d < 1 || d > m.ini) continue; const a = vis(d, m); if (a > .01) { if (m.vuela) { const v = m.vuela, t = TT * v.v + m.ph, px = m.x0 + Math.sin(t) * v.ax, py = m.y0 + Math.sin(t * 1.7) * v.ay; m.r = Math.atan2(Math.cos(t * 1.7) * v.ay * 1.7, Math.cos(t) * v.ax) / RAD - 90; m.r = Math.max(-60, Math.min(60, ((m.r + 540) % 360) - 180)); m.x = px; m.y = py; } lista.push([d, m, a, 1]); } }
     for (const p of petalos) { p.y += p.vy * dt; p.x += p.vx * dt; p.rx += p.sx * dt; p.ry += p.sy * dt; if (p.y < -hh * 1.3) p.y = hh * 1.3; const d = camZ - p.z; if (d > 2 && d < 300) lista.push([d, p, Math.min(1, (300 - d) / 60, (d - 2) / 8) * .85, 2]); }
     lista.sort((a, b) => b[0] - a[0]);
     for (const it of lista) { const [, o, a, tipo] = it, d = it[4] ?? it[0];
       if (tipo === 1) { // mariposa: dos alas que se doblan
-        const fl = (Math.sin(TT * o.f + o.ph) * .5 + .5) * 70 * RAD + 6 * RAD, base = mul(mul(mul(T(o.x, o.y + Math.sin(TT * .8 + o.ph) * 1.2, o.z), RZ(o.r * RAD)), RX(-o.tilt * RAD)), S(o.s, o.s));
+        const fl = (Math.sin(TT * o.f + o.ph) * .5 + .5) * (o.amp || 70) * RAD + 6 * RAD, base = mul(mul(mul(T(o.x, o.y + Math.sin(TT * .8 + o.ph) * 1.2, o.z), RZ(o.r * RAD)), RX(-o.tilt * RAD)), S(o.s, o.s));
         dibuja(o.R, mul(PV, mul(mul(mul(base, RY(-fl)), T(4.5, 0, 0)), S(9, 13.2))), a, [1, 1, 1], 1);
         dibuja(o.L, mul(PV, mul(mul(mul(base, RY(fl)), T(-4.5, 0, 0)), S(-9, 13.2))), a, [1, 1, 1], 1);
         dibuja(cuerpoT, mul(PV, mul(mul(base, T(0, 1, .1)), S(1.6, 8))), a, [1, 1, 1], 1); continue; }
