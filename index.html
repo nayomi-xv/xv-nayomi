@@ -70,7 +70,6 @@ body.abre #sello{opacity:0;transform:scale(1.5)}body.abre #desliza{opacity:0}
 <div id="largo"></div>
 <div id="desliza" aria-hidden="true">Toca o desliza<b></b></div>
 <div id="barra" aria-hidden="true"></div>
-<a id="ver" href="sobre/">Ver mi invitación</a>
 <div id="carga">Preparando la magia…</div>
 <div id="sin"><div><p>Tu navegador no puede mostrar el viaje 3D.</p><a href="sobre/">Ver mi invitación</a></div></div>
 
@@ -390,7 +389,7 @@ body.abre #sello{opacity:0;transform:scale(1.5)}body.abre #desliza{opacity:0}
 
   const dibuja = (tex, mm, a, k, b) => { gl.bindTexture(gl.TEXTURE_2D, tex); gl.uniformMatrix4fv(uM, false, mm); gl.uniform1f(uA, a); gl.uniform3f(uK, k[0], k[1], k[2]); gl.uniform1f(uB, b); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); };
   const vis = (d, o) => { if (d < 1) return 0; const fin = o.sal < 0 ? 0 : o.sal; const ain = Math.min(1, (o.ini - d) / 80), aout = fin ? Math.min(1, (d - fin * .55) / (fin * .45)) : 1; return Math.max(0, Math.min(ain, aout)); };
-  const telI = $("telI"), telD = $("telD"), desliza = $("desliza"), sello = $("sello"), ver = $("ver");
+  const telI = $("telI"), telD = $("telD"), desliza = $("desliza"), sello = $("sello");
   let last = performance.now(), TT = 0, est = -1, abierto = false;
   const abrir = () => { if (abierto) return; abierto = true; document.body.classList.add("abre");
     setTimeout(() => { telI.style.visibility = telD.style.visibility = sello.style.visibility = "hidden"; }, quieto ? 0 : 1600); };
@@ -434,7 +433,6 @@ body.abre #sello{opacity:0;transform:scale(1.5)}body.abre #desliza{opacity:0}
     }
     // estación y botón final
     const e = Math.round(viaje / D); if (e !== est) { est = e; puntos.forEach((x, i) => x.classList.toggle("on", i === e)); }
-    ver.classList.toggle("on", viaje > D * 5.85);
     requestAnimationFrame(cuadro);
   };
   $("carga").classList.add("fuera");
