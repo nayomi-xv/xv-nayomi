@@ -27,13 +27,16 @@ body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif
 #gl{position:fixed;left:0;top:0;width:100vw;height:100vh;height:100dvh;z-index:1;pointer-events:none;display:block}
 .telon{position:fixed;top:0;bottom:0;width:52%;z-index:3;pointer-events:none;background:
   repeating-linear-gradient(90deg,rgba(60,100,50,.18) 0 2%,rgba(255,255,255,.35) 4%,rgba(60,100,50,.08) 7%,rgba(255,255,255,.3) 10%,rgba(60,100,50,.18) 12.5%),
-  linear-gradient(180deg,#CDE6BB,#B2D79C 60%,#9CC985);will-change:transform}
-.telon.i{left:0;transform-origin:0 50%;box-shadow:inset -2vmin 0 3vmin rgba(60,100,50,.3)}
-.telon.d{right:0;transform-origin:100% 50%;box-shadow:inset 2vmin 0 3vmin rgba(60,100,50,.3)}
+  linear-gradient(180deg,#CDE6BB,#B2D79C 60%,#9CC985);will-change:transform;transition:transform 1.45s cubic-bezier(.7,0,.25,1);backface-visibility:hidden;contain:strict}
+.telon.i{left:0;transform-origin:0 50%}
+.telon.d{right:0;transform-origin:100% 50%}
+.telon::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 78%,rgba(60,100,50,.32))}.telon.d::before{transform:scaleX(-1)}
+body.abre .telon.i{transform:translate3d(-104%,0,0) scaleX(.86)}body.abre .telon.d{transform:translate3d(104%,0,0) scaleX(.86)}
+body.abre #sello{opacity:0;transform:scale(1.5)}body.abre #desliza{opacity:0}
 .telon::after{content:"";position:absolute;top:0;bottom:0;width:1.2vmin;background:var(--foil)}
 .telon.i::after{right:0}.telon.d::after{left:0}
 #sello{position:fixed;left:50%;top:50%;z-index:4;width:34vmin;height:34vmin;margin:-17vmin 0 0 -17vmin;border-radius:50%;display:grid;place-items:center;align-content:center;pointer-events:none;
-  background:radial-gradient(circle at 34% 28%,#E9A9BC 0%,#B9788A 40%,#7A4F5A 80%,#5A3640);box-shadow:0 2vmin 4vmin rgba(0,0,0,.5),inset 0 -1.4vmin 2.4vmin rgba(40,10,25,.45),inset 0 1vmin 2vmin rgba(255,220,235,.4);will-change:transform,opacity}
+  background:radial-gradient(circle at 34% 28%,#E9A9BC 0%,#B9788A 40%,#7A4F5A 80%,#5A3640);box-shadow:0 2vmin 4vmin rgba(0,0,0,.5),inset 0 -1.4vmin 2.4vmin rgba(40,10,25,.45),inset 0 1vmin 2vmin rgba(255,220,235,.4);will-change:transform,opacity;transition:opacity .5s ease-out,transform .7s cubic-bezier(.2,.8,.2,1)}
 #sello b{font:400 13vmin/1 "Italiana",serif;background:var(--foil);background-size:220% 100%;-webkit-background-clip:text;background-clip:text;color:transparent}
 #sello span{font:400 6vmin/1.1 "Pinyon Script","Chorus",cursive;color:#FFF5F8;margin-top:-.5vmin}
 #desliza{position:fixed;left:0;right:0;bottom:calc(40px + env(safe-area-inset-bottom,0px));z-index:5;text-align:center;font:600 13px/1 "Outfit",sans-serif;letter-spacing:.3em;text-transform:uppercase;color:var(--rosa-t);pointer-events:none;transition:opacity .5s}
@@ -65,7 +68,7 @@ body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif
   <p>Sábado 7 de noviembre de 2026, 8:00 p. m. Jr. San Juan Bautista 363, 2.ª etapa San Juan Bautista, Comas. Ref.: Incas Universitaria. Vestimenta: sport elegante.</p>
 </main>
 <div id="largo"></div>
-<div id="desliza" aria-hidden="true">Desliza hacia arriba<b></b></div>
+<div id="desliza" aria-hidden="true">Toca o desliza<b></b></div>
 <div id="barra" aria-hidden="true"></div>
 <a id="ver" href="sobre/">Ver mi invitación</a>
 <div id="carga">Preparando la magia…</div>
@@ -388,7 +391,11 @@ body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif
   const dibuja = (tex, mm, a, k, b) => { gl.bindTexture(gl.TEXTURE_2D, tex); gl.uniformMatrix4fv(uM, false, mm); gl.uniform1f(uA, a); gl.uniform3f(uK, k[0], k[1], k[2]); gl.uniform1f(uB, b); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); };
   const vis = (d, o) => { if (d < 1) return 0; const fin = o.sal < 0 ? 0 : o.sal; const ain = Math.min(1, (o.ini - d) / 80), aout = fin ? Math.min(1, (d - fin * .55) / (fin * .45)) : 1; return Math.max(0, Math.min(ain, aout)); };
   const telI = $("telI"), telD = $("telD"), desliza = $("desliza"), sello = $("sello"), ver = $("ver");
-  let pAb = -1, last = performance.now(), TT = 0, est = -1;
+  let last = performance.now(), TT = 0, est = -1, abierto = false;
+  const abrir = () => { if (abierto) return; abierto = true; document.body.classList.add("abre");
+    setTimeout(() => { telI.style.visibility = telD.style.visibility = sello.style.visibility = "hidden"; }, quieto ? 0 : 1600); };
+  addEventListener("scroll", () => { if (scrollY > 2) abrir(); }, { passive: true });
+  ["pointerdown", "wheel", "keydown", "touchmove"].forEach((ev) => addEventListener(ev, abrir, { passive: true }));
   const lista = [];
   const cuadro = (now) => {
     const dt = Math.min(.05, (now - last) / 1000); last = now; TT += dt;
@@ -397,12 +404,6 @@ body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif
     vel += ((viaje - antes) / Math.max(dt, .001) - vel) * .1;
     if (!puntero) { tmx = 0; tmy = 0; }
     mx += (tmx - mx) * .08; my += (tmy - my) * .08;
-    // telón
-    const ab = Math.min(1, prog() / .06);
-    if (ab !== pAb) { pAb = ab; const e = 1 - Math.pow(1 - ab, 3);
-      telI.style.transform = `translateX(${(-e * 104).toFixed(2)}%) perspective(800px) rotateY(${(e * 28).toFixed(1)}deg)`; telD.style.transform = `translateX(${(e * 104).toFixed(2)}%) perspective(800px) rotateY(${(-e * 28).toFixed(1)}deg)`;
-      telI.style.visibility = telD.style.visibility = e >= 1 ? "hidden" : "visible"; desliza.style.opacity = ab > .05 ? 0 : 1;
-      sello.style.opacity = Math.max(0, 1 - ab * 3); sello.style.transform = `scale(${(1 + ab * 1.2).toFixed(3)})`; sello.style.visibility = ab > .34 ? "hidden" : "visible"; }
     // cámara: avanza, se mece un poco al moverse y mira hacia donde inclinas el celular
     const camZ = 100 - viaje, camX = Math.sin(viaje / D * Math.PI) * 4, roll = Math.max(-1, Math.min(1, vel / 900)) * 2.2 * RAD;
     const view = mul(mul(mul(RZ(-roll), RX(my * 10 * RAD)), RY(mx * 14 * RAD)), T(-camX, 0, -camZ));
