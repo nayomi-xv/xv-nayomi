@@ -21,7 +21,7 @@
 *{box-sizing:border-box}
 html{background:#D6EAC8}
 body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
-#largo{height:700vh}
+#largo{height:800vh}
 #fondo{position:fixed;inset:0;z-index:0;background:#D6EAC8 center/cover}
 #fondo::after{content:"";position:absolute;inset:0;background:radial-gradient(55% 35% at 12% 8%,rgba(248,190,212,.38),transparent 70%),radial-gradient(55% 35% at 92% 88%,rgba(248,190,212,.4),transparent 70%),radial-gradient(70% 55% at 50% 45%,rgba(255,255,250,.35),transparent 70%),radial-gradient(80% 60% at 50% 50%,transparent 55%,rgba(90,130,70,.25))}
 #gl{position:fixed;left:0;top:0;width:100vw;height:100vh;height:100dvh;z-index:1;pointer-events:none;display:block}
@@ -93,6 +93,7 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   <h1>XV años de Nayomi Cholan Ramos</h1>
   <p>«Serás corona de gloria en la mano de Jehová, y diadema de reino en la mano del Dios tuyo.» Isaías 62:3</p>
   <p>Sábado 7 de noviembre de 2026, 8:00 p. m. Jr. San Juan Bautista 363, 2.ª etapa San Juan Bautista, Comas. Ref.: Incas Universitaria.</p>
+  <p>Mi padre: Luis Ananias Cholan Calua. Mi padrino: Juan José Terán.</p>
 </main>
 <div id="largo"></div>
 <div id="desliza" aria-hidden="true">Desliza hacia arriba<b></b></div>
@@ -302,7 +303,7 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   const globos = (z1, n, sal = 20) => { for (let j = 0; j < (lite ? Math.ceil(n / 2) : n); j++) { const lado = j % 2 ? 1 : -1, d0 = rnd(28, 46), k = (100 + d0) / 100;
       if (j < 2) { const w = 21 * k; obj(racimoT[j], { x: lado * hw * (ancho ? .74 : .7) * k, y: 0, z: z1 - d0, w, h: w * 1.25, sube: hh * 2.8 * k, ph: j * hh * 1.3 * k + rnd(0, 20), vsube: .5, ini: 230, sal }); }
       else { const w = rnd(8, 11) * k; obj(globosT[j % 3], { x: lado * hw * rnd(.72, .92) * k, y: 0, z: z1 - d0, w, h: w * 15.8 / 8, sube: hh * 2.8 * k, ph: rnd(0, hh * 2.8 * k), vsube: .6, ini: 230, sal }); } } };
-  const estrellas = (z1, n, sal = 20) => { for (let j = 0; j < n; j++) obj(estrellaT, { x: (j % 2 ? 1 : -1) * hw * rnd(.5, .85), y: rnd(-.7, .7) * hh, z: z1 + rnd(-8, 10), w: rnd(3.4, 5), h: 0, spinY: rnd(.8, 1.6) * (j % 2 ? 1 : -1), b: .8, ini: 210, sal }); };
+  const estrellas = (z1, n, sal = 20) => { for (let j = 0; j < n; j++) obj(estrellaT, { x: (j % 2 ? 1 : -1) * hw * rnd(.5, .85), y: rnd(-.7, .7) * hh, z: z1 + rnd(-8, 10), w: rnd(3.4, 5), h: 0, spinY: rnd(.8, 1.6) * (j % 2 ? 1 : -1), b: .8, ini: 210, sal, deco: 1 }); };
 
   // 0 · portada
   let z = 0;
@@ -319,7 +320,7 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   let ramT;
   { // XV con volumen, tiara, enredadera de flores, mariposas posadas y brillos
     const T0 = ancho ? 28 : 44, Y0 = ancho ? 4 : hh * .06, xv = texto("XV", { t: T0, fam: "caps", oro: 1 });
-    grueso(xv, { y: Y0, z: z + 2, sal: 30, meceY: 7, canto: [.62, .5, .32], b: .7 }, lite ? 2 : 4, .3);
+    grueso(xv, { y: Y0, z: z + 2, sal: 30, meceY: 7, canto: [.62, .5, .32], b: .7 }, lite ? 3 : 6, .28);
     const tiara = `<g transform="translate(0 6)"><path d="M-96,22 L-76,-8 L-58,14 L-35,-24 L-15,10 L0,-44 L15,10 L35,-24 L58,14 L76,-8 L96,22 C60,31 -60,31 -96,22 Z" fill="url(#oro)" stroke="#7A5A22" stroke-width="1.6" stroke-linejoin="round"/><path d="M-80,16 C-40,22 40,22 80,16" fill="none" stroke="#FFF6D8" stroke-opacity=".7" stroke-width="1.6"/>` +
       [[-76, -8, 4.6, "perlaG"], [76, -8, 4.6, "perlaG"], [-35, -24, 6.4, "joyaV"], [35, -24, 6.4, "joyaV"], [0, -44, 9.5, "joyaR"], [-15, 10, 3.8, "joyaR"], [15, 10, 3.8, "joyaR"], [-58, 14, 3.4, "joyaV"], [58, 14, 3.4, "joyaV"]].map(([x, y, r, g]) => `<circle cx="${x}" cy="${y}" r="${r}" fill="url(#${g})" stroke="#7A5A22" stroke-width="1"/><circle cx="${x - r * .3}" cy="${y - r * .35}" r="${r * .3}" fill="#fff" opacity=".85"/>`).join("") +
       [-84, -63, -42, -21, 0, 21, 42, 63, 84].map((x) => `<circle cx="${x}" cy="${(25 - Math.abs(x) * .05).toFixed(1)}" r="3" fill="url(#perlaG)"/>`).join("") + `<path d="M0,-66 l2.6,7.4 7.4,2.6 -7.4,2.6 -2.6,7.4 -2.6,-7.4 -7.4,-2.6 7.4,-2.6 Z" fill="#FFF6D8"/></g>`;
@@ -401,8 +402,21 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   jardin(z, 16);
 
   obj(ramT, { y: ancho ? -42 : -hh * .43, z: z + 4, w: (ancho ? 50 : 66), h: (ancho ? 50 : 66) * .4, sal: 24, b: 1 }); 
-  // 4 · la fecha
+  // 4 · con la bendición de Dios: papá y padrino
   z = -4 * D; guir(z);
+  desde(texto("Con la bendición de Dios", { t: ancho ? 6.4 : 6.8, fam: "ita" }), { y: ancho ? 35 : hh * .66, z, sal: 26, gira: 1 });
+  desde(texto("Y EL CARIÑO DE", { t: 3, peso: 600, esp: .26, col: "#B5577A" }), { y: ancho ? 27 : hh * .55, z, sal: 26 });
+  [["MI PADRE", "Luis Ananias Cholan Calua"], ["MI PADRINO", "Juan José Terán"]].forEach(([a1, b1], i) => {
+    const filas = [{ t: a1, tam: 2.8, peso: 600, esp: .24, col: "#9C7631", una: 1, gap: 2.4 }, { t: b1, tam: ancho ? 6.4 : 7, fam: "serif", lh: 1.12 }];
+    grueso(tarjeta(ancho ? 48 : 76, filas, 16), ancho ? { x: (i ? 1 : -1) * 27, y: -2, z: z - i * 6, ry: (i ? -1 : 1) * 14 * RAD, sal: 22, gira: 1, balancea: 1 } : { y: (i ? -1 : 1) * hh * .2 + (i ? -hh * .06 : 0), z: z - i * 8, ry: (i % 2 ? -1 : 1) * 9 * RAD, sal: 22, gira: 1, balancea: 1 }, lite ? 2 : 4, .7); });
+  desde({ c: ramoC, w: 40, h: 31.3 }, { x: -hw * .84, y: -hh * .88, z: z + 10, sal: 12 }); desde({ c: ramoC2, w: 40, h: 31.3 }, { x: hw * .84, y: -hh * .88, z: z + 10, sal: 12 });
+  mari("rosa", "lima", { x: hw * .62, y: hh * .78, z: z + 6, s: .65, r: -18 }); mari("lima", "rosa", { x: -hw * .66, y: -hh * .02, z: z + 8, s: .6, r: 16 });
+  vuela("rosa", "perla", z - 8); vuela("lima", "rosa", z - 14);
+  globos(z, 4); estrellas(z, 3);
+  jardin(z, 16);
+
+  // 5 · la fecha
+  z = -5 * D; guir(z);
   mari("celeste", "rosa", { x: -hw * .62, y: hh * .38, z: z + 8, s: .75, r: 18 }); mari("perla", "lima", { x: hw * .6, y: -hh * .6, z: z + 5, s: .65, r: -14 });
   obj(ramT, { y: ancho ? -42 : -hh * .5, z: z + 6, w: (ancho ? 46 : 62), h: (ancho ? 46 : 62) * .4, sal: 24, b: 1 }); 
   desde(texto("GUARDA LA FECHA", { t: 3.4, peso: 600, esp: .26, col: "#B5577A" }), { y: hh * .62, z, sal: 26, gira: 1 });
@@ -413,8 +427,8 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
 
   orbita(0, hh * .02, z, ancho ? 36 : 40, lite ? 6 : 10, 5.4, .42, .16, [coraT, floresT[0], floresT[2], coraT, floresT[1]]); globos(z, 4);
 
-  // 5 · los detalles
-  z = -5 * D;
+  // 6 · los detalles
+  z = -6 * D;
   mari("rosa", "rosa", { x: hw * .7, y: hh * .78, z: z + 8, s: .6, r: -20 });
   const det = [["HORA", "8:00 p. m.", "Sábado 7 de noviembre"], ["LUGAR", "Jr. San Juan Bautista 363", "2.ª etapa San Juan Bautista, Comas · Ref.: Incas Universitaria"]];
   det.forEach(([a1, b1, c1], i) => { const filas = [{ t: a1, tam: 2.7, peso: 600, esp: .24, col: "#9C7631", una: 1, gap: 2 }, { t: b1, tam: 7, fam: "serif", lh: 1.12, gap: c1 ? 2 : 0 }]; if (c1) filas.push({ t: c1, tam: 3.5, col: "#B5577A", lh: 1.35 });
@@ -422,8 +436,8 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   vuela("lima", "rosa", z + 14); vuela("rosa", "rosa", z + 22, { s: .55 });
   jardin(z, 16);
 
-  // 6 · final
-  z = -6 * D; guir(z);
+  // 7 · final
+  z = -7 * D; guir(z);
   grueso(texto("¡Te espero!", { t: 14, fam: "serif", oro: 1 }), { y: hh * .34, z: z + 2, sal: -99, canto: [.62, .5, .32], b: .7 }, lite ? 1 : 3, .3);
   desde(texto("Sábado 7 de noviembre · 8:00 p. m.", { t: ancho ? 5 : 5.4, fam: "ita" }), { y: hh * .04, z, sal: -99 });
   desde(texto("Jr. San Juan Bautista 363, Comas", { t: ancho ? 4 : 4.4, fam: "ita", col: "#B5577A" }), { y: -hh * .04, z, sal: -99 });
@@ -435,26 +449,30 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   orbita(0, hh * .34, z + 2, ancho ? 34 : 38, lite ? 8 : 12, 5, .45, .18, [estrellaT, floresT[0], perlaT, floresT[2], coraT, floresT[4]]); globos(z, 6, -99); estrellas(z, 4, -99);
 
   // primer plano: flores y hojas grandes muy cerca de la cámara en las esquinas (se mueven más rápido = se siente la profundidad)
-  for (let e = 0; e < 7; e++) { const z0 = -e * D, dd = 42, zz = z0 + 100 - dd, vx = hw * dd / 100, vy = hh * dd / 100, lado = e % 2 ? -1 : 1;
+  for (let e = 0; e < 8; e++) { const z0 = -e * D, dd = 42, zz = z0 + 100 - dd, vx = hw * dd / 100, vy = hh * dd / 100, lado = e % 2 ? -1 : 1;
     obj(floresT[(e * 2) % 5], { x: -lado * vx * .92, y: -vy * .9, z: zz, w: 9, h: 9, rz: e, sal: 3, ini: 230, spin: .08 * lado });
     obj(hojaT, { x: -lado * vx * 1.02, y: -vy * .72, z: zz - 1, w: 13, h: 7, rz: (lado > 0 ? 210 : -30) * RAD, sal: 3, ini: 230 });
     obj(floresT[(e * 2 + 1) % 5], { x: lado * vx * .95, y: vy * .55, z: zz + 3, w: 6.5, h: 6.5, rz: e * 2, sal: 3, ini: 230, spin: -.1 * lado });
     obj(hojaT, { x: lado * vx * 1.05, y: vy * .66, z: zz + 2, w: 10, h: 5.5, rz: (lado > 0 ? -25 : 205) * RAD, sal: 3, ini: 230 });
     // corazones que suben y brillos alrededor
     for (let j = 0; j < (lite ? 3 : 6); j++) obj(coraT, { x: (j % 2 ? 1 : -1) * hw * rnd(.45, .85), y: 0, z: z0 + rnd(-10, 14), w: rnd(3.4, 5.4), h: 0, sube: hh * 2.2, ph: rnd(0, hh * 2.2), ini: 200, sal: 8 });
-    for (let j = 0; j < (lite ? 3 : 7); j++) obj(brilloT, { x: rnd(-.85, .85) * hw, y: rnd(-.8, .8) * hh, z: z0 + rnd(-6, 16), w: rnd(2.2, 4), h: 0, ini: 200, sal: 8, tw: rnd(1.2, 2.6) }); }
+    for (let j = 0; j < (lite ? 3 : 7); j++) obj(brilloT, { x: rnd(-.85, .85) * hw, y: rnd(-.8, .8) * hh, z: z0 + rnd(-6, 16), w: rnd(2.2, 4), h: 0, ini: 200, sal: 8, tw: rnd(1.2, 2.6), deco: 1 }); }
 
   // arcos de flores (un solo dibujo, se usa 6 veces)
   const AX = hw * .36, AY = hh * .07;            // la cámara se va de lado y sube un poco a mitad de camino
   // fondo lejano: flores y hojas grandes, suaves (se mueven lento = profundidad)
-  for (let e = 0; e < 7; e++) { const z0 = -e * D; for (let j = 0; j < (lite ? 3 : 6); j++) { const lado = j % 2 ? 1 : -1, dd = rnd(70, 120), k = (100 + dd) / 100, t = j % 4 === 3 ? hojaT : floresT[(j + e) % 5], w = rnd(11, 17) * k;
-      obj(t, { x: lado * hw * rnd(.35, .95) * k, y: rnd(-.9, .9) * hh * k, z: z0 - dd, w, h: t === hojaT ? w * .55 : w, rz: rnd(0, 6.28), b: 1, ini: 260, sal: 10, spin: rnd(-.06, .06) }); }
+  for (let e = 0; e < 8; e++) { const z0 = -e * D; for (let j = 0; j < (lite ? 3 : 6); j++) { const lado = j % 2 ? 1 : -1, dd = rnd(70, 120), k = (100 + dd) / 100, t = j % 4 === 3 ? hojaT : floresT[(j + e) % 5], w = rnd(11, 17) * k;
+      obj(t, { x: lado * hw * rnd(.35, .95) * k, y: rnd(-.9, .9) * hh * k, z: z0 - dd, w, h: t === hojaT ? w * .55 : w, rz: rnd(0, 6.28), b: 1, ini: 260, sal: 10, deco: 1, spin: rnd(-.06, .06) }); }
     // corazones grandes que giran en 3D
     for (let j = 0; j < (lite ? 1 : 3); j++) obj(coraT, { x: (j % 2 ? 1 : -1) * hw * rnd(.55, .8), y: rnd(-.55, .6) * hh, z: z0 + rnd(-14, 6), w: rnd(5.5, 8), h: 0, spinY: rnd(.9, 1.5) * (j % 2 ? 1 : -1), b: .75, ini: 220, sal: 10 }); }
 
+  // en cada parte: flores y corazones 3D que giran
+  for (let e = 0; e < 8; e++) { const z0 = -e * D; for (let j = 0; j < (lite ? 2 : 4); j++) { const t = j % 2 ? coraT : floresT[(j + e * 3) % 5], w = t === coraT ? rnd(5, 7) : rnd(6, 8.5);
+    obj(t, { x: (j % 2 ? 1 : -1) * hw * rnd(.5, .82), y: rnd(-.7, .7) * hh, z: z0 + rnd(-12, 8), w, h: t === coraT ? w * .92 : w, spinY: rnd(.5, .9) * (j % 2 ? 1 : -1), cruz: 1, b: .8, ini: 220, sal: 10, deco: 1 }); } }
+
   // remolino de brillos alrededor del camino de la cámara
-  for (let k = 0; k < 6; k++) { const n = lite ? 14 : 30; for (let j = 0; j < n; j++) { const u = (j + .5) / n, sv = (k + .12 + u * .76) * D, f = sv / D - k, s1 = Math.sin(Math.PI * f) ** 2, cx = (k % 2 ? -1 : 1) * AX * s1, cy = AY * s1, an = u * Math.PI * 7 + k, rr = 16 + (j % 3) * 5;
-    obj(j % 4 === 0 ? estrellaT : brilloT, { x: cx + Math.cos(an) * rr * (hw / 50), y: cy + Math.sin(an) * rr * (hh / 50) * .8, z: 100 - sv - 8, w: j % 4 === 0 ? 3.2 : rnd(2, 3.4), h: 0, ini: 170, sal: 3, tw: rnd(1.5, 3), spinY: j % 4 === 0 ? 1.4 : 0 }); } }
+  for (let k = 0; k < 7; k++) { const n = lite ? 14 : 30; for (let j = 0; j < n; j++) { const u = (j + .5) / n, sv = (k + .12 + u * .76) * D, f = sv / D - k, s1 = Math.sin(Math.PI * f) ** 2, cx = (k % 2 ? -1 : 1) * AX * s1, cy = AY * s1, an = u * Math.PI * 7 + k, rr = 16 + (j % 3) * 5;
+    obj(j % 4 === 0 ? estrellaT : brilloT, { x: cx + Math.cos(an) * rr * (hw / 50), y: cy + Math.sin(an) * rr * (hh / 50) * .8, z: 100 - sv - 8, w: j % 4 === 0 ? 3.2 : rnd(2, 3.4), h: 0, ini: 170, sal: 3, tw: rnd(1.5, 3), spinY: j % 4 === 0 ? 1.4 : 0, deco: 1 }); } }
   const arcos = async () => { const RW = hw * 1.95, RH = hh * 1.8, vw = 1000, vh = Math.round(1000 * RH / RW), ex = 405, ey = vh / 2 - 85; let p = `<ellipse cx="0" cy="0" rx="${ex}" ry="${ey}" fill="none" stroke="#C9A14F" stroke-width="6" stroke-opacity=".85"/><ellipse cx="0" cy="0" rx="${ex - 14}" ry="${ey - 14}" fill="none" stroke="#FFF6D8" stroke-width="2" stroke-opacity=".7"/>`;
     const n = 30, ks = ["rosa", "perla", "lima", "rosa", "lima", "perla"];
     for (let i = 0; i < n; i++) { const t = i / n * Math.PI * 2, x = Math.cos(t) * ex, y = Math.sin(t) * ey, gr = (t * 180 / Math.PI); p += hoja(x, y, 70, gr + 60) + hoja(x, y, 62, gr - 70); }
@@ -462,14 +480,14 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
     for (let i = 0; i < n; i++) { const t = i / n * Math.PI * 2, x = Math.cos(t) * ex, y = Math.sin(t) * ey; p += flor(x, y, i % 3 === 0 ? 52 : 38, P[ks[i % 6]], i * 37); if (i % 3 === 1) p += flor(x + Math.cos(t) * 46, y + Math.sin(t) * 46, 22, P[ks[(i + 2) % 6]], i * 11); }
     p += destello(0, -ey - 40, 22, "#FFF1C4") + destello(-ex * .7, -ey * .72, 14, "#FFF1C4") + destello(ex * .72, ey * .7, 16, "#FFF1C4");
     const arT = textura(await deSvg(`${-vw / 2} ${-vh / 2} ${vw} ${vh}`, p, RW, RH, lite ? .35 : .5));
-    for (let k = 0; k < 6; k++) for (const dz of [0, 62]) { const sv = (k + .5) * D + 10 + dz, f = sv / D - k, s1 = Math.sin(Math.PI * Math.min(1, f)) ** 2; obj(arT, { x: (k % 2 ? -1 : 1) * AX * s1, y: AY * s1, z: 100 - sv, w: RW * (dz ? .92 : 1), h: RH * (dz ? .92 : 1), rz: (dz ? 1 : -1) * (k % 2 ? -1 : 1) * 7 * RAD, ini: 145, sal: 4, b: 1, spin: (k % 2 ? -1 : 1) * (dz ? -.06 : .05), arco: 1 }); } };
+    for (let k = 0; k < 7; k++) for (const dz of [0, 62]) { const sv = (k + .5) * D + 10 + dz, f = sv / D - k, s1 = Math.sin(Math.PI * Math.min(1, f)) ** 2; obj(arT, { x: (k % 2 ? -1 : 1) * AX * s1, y: AY * s1, z: 100 - sv, w: RW * (dz ? .92 : 1), h: RH * (dz ? .92 : 1), rz: (dz ? 1 : -1) * (k % 2 ? -1 : 1) * 7 * RAD, ini: 145, sal: 4, b: 1, spin: (k % 2 ? -1 : 1) * (dz ? -.06 : .05), arco: 1 }); } };
   objs.forEach((o) => { if (!o.h) o.h = o.w; });
 
   // pétalos que caen dando vueltas en 3D por todo el viaje
-  const petalos = []; for (let i = 0; i < (lite ? 24 : 72); i++) petalos.push({ t: i % 4 === 1 ? floresT[i % 5] : petaloT[i % 4], x: rnd(-1, 1) * hw, y: rnd(-1, 1) * hh, z: rnd(-6 * D - 120, 60), vx: rnd(-1, 1), vy: rnd(-5, -2.5), rx: rnd(0, 6), ry: rnd(0, 6), sx: rnd(1, 2.6), sy: rnd(.8, 2), s: rnd(2.2, 3.6) });
+  const petalos = []; for (let i = 0; i < (lite ? 24 : 72); i++) petalos.push({ t: i % 4 === 1 ? floresT[i % 5] : petaloT[i % 4], x: rnd(-1, 1) * hw, y: rnd(-1, 1) * hh, z: rnd(-7 * D - 120, 60), vx: rnd(-1, 1), vy: rnd(-5, -2.5), rx: rnd(0, 6), ry: rnd(0, 6), sx: rnd(1, 2.6), sy: rnd(.8, 2), s: rnd(2.2, 3.6) });
 
   /* ================= cámara ================= */
-  const N = 7, barra = $("barra"); barra.innerHTML = "<i></i>".repeat(N); const puntos = [...barra.children];
+  const N = 8, barra = $("barra"); barra.innerHTML = "<i></i>".repeat(N); const puntos = [...barra.children];
   const suave = (a, b, t) => { const v = Math.max(0, Math.min(1, (t - a) / (b - a))); return v * v * (3 - 2 * v); };
   const camDe = (p0) => { const p = Math.max(0, (p0 - .02) / .98), s = p * (N - 1), k = Math.min(N - 2, Math.floor(s)), t = s - k; return (k + (k ? suave(.24, .8, t) : suave(.06, .8, t))) * D; };
   const prog = () => { const m = document.documentElement.scrollHeight - innerHeight; return m > 0 ? Math.max(0, Math.min(1, scrollY / m)) : 0; };
@@ -510,13 +528,13 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   const porDist = (a, b) => b.ds - a.ds;
   const lista = [];
   // resolución que se adapta: si el celular no llega a ~40 cuadros por segundo, baja un poco la nitidez
-  let fq = 0, fn = 0, bajadas = 0, desde0 = 0, nCu = 0;
+  let fq = 0, fn = 0, bajadas = 0, desde0 = 0, nCu = 0, ahorro = lite;
   const cuadro = (now) => {
     if (!abierto && nCu > 2) { last = now; requestAnimationFrame(cuadro); return; } nCu++;
     const raw = (now - last) / 1000, dt = Math.min(.05, raw); last = now; TT += dt;
-    if (abierto && raw < .25) { desde0 += raw; if (desde0 > 2.5) { fq += raw; fn++; if (fn >= 45) { if (fq / fn > 1 / 40 && DPR > 1 && bajadas < 3) { DPR = Math.max(1, DPR * .8); bajadas++; tam(); } fq = 0; fn = 0; } } }
+    if (abierto && raw < .25) { desde0 += raw; if (desde0 > 2.5) { fq += raw; fn++; if (fn >= 45) { if (fq / fn > 1 / 40) { if (DPR > 1 && bajadas < 3) { DPR = Math.max(1, DPR * .8); bajadas++; tam(); } else ahorro = true; } fq = 0; fn = 0; } } }
     const tz = camDe(prog()), antes = viaje;
-    viaje = quieto ? tz : viaje + (tz - viaje) * Math.min(1, dt * 12); if (Math.abs(tz - viaje) < .02) viaje = tz;
+    let paso = (tz - viaje) * Math.min(1, dt * 12); const tope = dt * D * 1.15; paso = Math.max(-tope, Math.min(tope, paso)); viaje = quieto ? tz : viaje + paso; if (Math.abs(tz - viaje) < .02) viaje = tz;
     vel += ((viaje - antes) / Math.max(dt, .001) - vel) * .1;
     if (!puntero) { tmx = 0; tmy = 0; }
     mx += (tmx - mx) * .08; my += (tmy - my) * .08;
@@ -530,7 +548,7 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
     mt(VW1, sZ(q1, -roll), sX(q2, my * 12 * RAD + pitch)); mt(VW2, VW1, sY(q3, mx * 18 * RAD + yaw + (1 - ea) * 10 * RAD + Math.sin(TT * .33) * 1.6 * RAD * resp)); mt(VIEW, VW2, sT(q4, -camX2, -camY2, -camZ)); mt(PV, proj, VIEW);
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     nl = 0;
-    for (const o of objs) { const d = camZ - o.z; if (d < 1 || d > o.ini) continue; const a = vis(d, o) * o.a; if (a <= .01) continue; let ds = d; if (o.orb) { const b = o.orb, th = b.a + TT * b.v; ds = d - b.R * Math.cos(th); } else if (o.corona) ds = d - o.corona.R * Math.cos(o.corona.i * Math.PI * 2 / 14 + TT * .45); const it = item(); it.ds = ds; it.o = o; it.a = a; it.tipo = 0; it.d = d; nl++; }
+    for (const o of objs) { if (ahorro && o.deco) continue; const d = camZ - o.z; if (d < 1 || d > o.ini) continue; const a = vis(d, o) * o.a; if (a <= .01) continue; let ds = d; if (o.orb) { const b = o.orb, th = b.a + TT * b.v; ds = d - b.R * Math.cos(th); } else if (o.corona) ds = d - o.corona.R * Math.cos(o.corona.i * Math.PI * 2 / 14 + TT * .45); const it = item(); it.ds = ds; it.o = o; it.a = a; it.tipo = 0; it.d = d; nl++; }
     for (const m of maris) { const d = camZ - m.z; if (d < 1 || d > m.ini) continue; const a = vis(d, m); if (a > .01) { if (m.vuela) { const v = m.vuela, t = TT * v.v + m.ph, px = m.x0 + Math.sin(t) * v.ax, py = m.y0 + Math.sin(t * 1.7) * v.ay; m.r = Math.atan2(Math.cos(t * 1.7) * v.ay * 1.7, Math.cos(t) * v.ax) / RAD - 90; m.r = Math.max(-60, Math.min(60, ((m.r + 540) % 360) - 180)); m.x = px; m.y = py; } const it = item(); it.ds = d; it.o = m; it.a = a; it.tipo = 1; it.d = d; nl++; } }
     for (const p of petalos) { p.y += p.vy * dt; p.x += p.vx * dt; p.rx += p.sx * dt; p.ry += p.sy * dt; if (p.y < -hh * 1.3) p.y = hh * 1.3; const d = camZ - p.z; if (d > 2 && d < 300) { const it = item(); it.ds = d; it.o = p; it.a = Math.min(1, (300 - d) / 60, (d - 2) / 8) * .85; it.tipo = 2; it.d = d; nl++; } }
     lista.length = nl; for (let i = 0; i < nl; i++) lista[i] = pool[i];
@@ -555,6 +573,7 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
       mt(FIN, PV, w4); if (fuera(FIN)) continue;
       let aa = a; if (o.tw) aa *= .45 + .55 * Math.sin(TT * o.tw * 3 + o.x);
       dibuja(o.tex, FIN, aa, o.k, o.b);
+      if (o.cruz) { mt(w1, sT(q1, o.x, o.y, o.z), sY(q2, TT * (o.spinY || 0) + Math.PI / 2)); mt(w2, w1, sX(q3, o.rx)); mt(w3, w2, sZ(q4, o.rz)); mt(w4, w3, sS(q5, o.w, o.h)); mt(FIN, PV, w4); dibuja(o.tex, FIN, aa, o.k, o.b); }
     }
     // estación y botón final
     const e = Math.round(viaje / D); if (e !== est) { est = e; puntos.forEach((x, i) => x.classList.toggle("on", i === e)); }
