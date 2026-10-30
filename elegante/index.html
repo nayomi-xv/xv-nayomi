@@ -719,7 +719,7 @@ setTimeout(plan_b, 30000);
   const frena = (e) => { if (H.classList.contains("cerrado")) e.preventDefault(); };
   addEventListener("touchmove", frena, { passive: false }); addEventListener("wheel", frena, { passive: false });
   const abrir = () => { if (abierto) return; if (!listoYa) { pide = true; return; } abierto = true; scrollTo(0, 0); tAb = performance.now(); portal.classList.add("abre"); document.body.classList.add("abre");
-    setTimeout(() => { scrollTo(0, 0); H.classList.remove("cerrado"); }, quieto ? 0 : 1900); setTimeout(() => { portal.style.display = "none"; }, quieto ? 0 : 1600); setTimeout(() => window.__auto && window.__auto(), quieto ? 1200 : 3600);
+    setTimeout(() => { scrollTo(0, 0); H.classList.remove("cerrado"); }, quieto ? 0 : 1900); setTimeout(() => { portal.style.display = "none"; }, quieto ? 0 : 1600); setTimeout(() => window.__auto && window.__auto(), quieto ? 1200 : 3000);
     if (false) setTimeout(() => { if (scrollY < 30 && performance.now() - tAb > 4500) { $("mano").classList.add("on"); document.body.classList.add("mano"); } }, quieto ? 600 : 5200); };
   addEventListener("scroll", () => { if (H.classList.contains("cerrado")) { if (scrollY) scrollTo(0, 0); return; } if (scrollY > 60) document.body.classList.add("bajo"); }, { passive: true });
   ["pointerdown", "keydown"].forEach((ev) => addEventListener(ev, abrir, { passive: true }));
@@ -754,7 +754,7 @@ setTimeout(plan_b, 30000);
     const raw = (now - last) / 1000, dt = Math.min(.05, raw); last = now; TT += dt;
     if (abierto && raw < .25) { desde0 += raw; if (desde0 > 2.5) { fq += raw; fn++; if (fn >= 45) { if (fq / fn > 1 / 40) { if (DPR > 1 && bajadas < 3) { DPR = Math.max(1, DPR * .8); bajadas++; tam(); } else ahorro = true; } fq = 0; fn = 0; } } }
     const tz = camDe(prog()), antes = viaje;
-    let paso = (tz - viaje) * Math.min(1, dt * 12); const tope = dt * D * 1.5; paso = Math.max(-tope, Math.min(tope, paso)); viaje = quieto ? tz : viaje + paso; if (Math.abs(tz - viaje) < .02) viaje = tz;
+    let paso = (tz - viaje) * Math.min(1, dt * 12); const tope = dt * D * 2.2; paso = Math.max(-tope, Math.min(tope, paso)); viaje = quieto ? tz : viaje + paso; if (Math.abs(tz - viaje) < .02) viaje = tz;
     vel += ((viaje - antes) / Math.max(dt, .001) - vel) * .1;
     if (!puntero) { tmx = 0; tmy = 0; }
     mx += (tmx - mx) * .08; my += (tmy - my) * .08;
@@ -815,7 +815,7 @@ setTimeout(plan_b, 30000);
     requestAnimationFrame(cuadro);
   };
   // ===== AUTOMÁTICO: avanza solo como un video; tocar la pantalla pausa o continúa =====
-  { const play = $("play"), est = $("estado"), HOLD = [3, 2.5, 4, 5.5, 6, 3.5, 4.5], MOVE = 2.4;
+  { const play = $("play"), est = $("estado"), HOLD = [2, 1.8, 3, 4, 4.5, 2.5, 3.5], MOVE = 1.8;
     let modo = "off", u = 0, espera = 0, t0 = 0, tocT = 0, tx = 0, ty = 0;
     const maxS = () => document.documentElement.scrollHeight - innerHeight;
     const uDe = () => { const p = maxS() > 0 ? scrollY / maxS() : 0; return Math.max(0, Math.min(N - 1, (p - .02) / .98 * (N - 1))); };
