@@ -303,7 +303,7 @@ setTimeout(plan_b, 30000);
     for (const [f, ls, y] of L) { fnt(x, f.peso || 400, f.tam, famDe(f), f.esp || 0); x.fillStyle = f.col || "#34502A"; ls.forEach((t, i) => ft(x, t, wU / 2 + (f.esp || 0) * f.tam / 2, y + i * f.tam * (f.lh || 1.25))); }
     x.drawImage(lazoC, wU / 2 - lazoW / 2, -top, lazoW, lazoW * 23 / 31);
     if (flores.length) { const fl = (i, a, b, t) => x.drawImage(flores[i], a - t / 2, b - t / 2, t, t); fl(0, 3.2, 3.2, 7); fl(2, 7.5, 1.8, 4.4); fl(2, wU - 3.2, h - 3.2, 7); fl(0, wU - 7.6, h - 1.8, 4.4); }
-    return { c, w: wU + 4, h: H }; };
+    return { c, w: wU + 4, h: H, lam: 1 }; };
   const calendario = (wU) => { const hU = wU * 1.12, top = 14; const [c, x] = lienzo(wU + 4, hU + top + 3); x.translate(2, top);
     x.save(); sombra(x, "rgba(60,100,50,.35)", 4, 2); const g = x.createLinearGradient(0, 0, 0, hU); g.addColorStop(0, "#FFFFFF"); g.addColorStop(1, "#FBEFF4"); x.fillStyle = g; rr(x, 0, 0, wU, hU, 4); x.fill(); x.restore();
     x.save(); rr(x, 0, 0, wU, hU, 4); x.clip(); const t = x.createLinearGradient(0, 0, wU, 0); t.addColorStop(0, "#86B86C"); t.addColorStop(.45, "#B5DA9C"); t.addColorStop(1, "#78A95E"); x.fillStyle = t; x.fillRect(0, 0, wU, wU * .16); x.restore();
@@ -311,7 +311,7 @@ setTimeout(plan_b, 30000);
     fnt(x, 400, wU * .46, '"Cinzel"'); const q = x._s, og = x.createLinearGradient(0, wU * .3 * q, wU * q, wU * .7 * q); [["#7A5A22", 0], ["#B8923F", .35], ["#E3C67C", .5], ["#9C7631", .65], ["#7A5A22", 1]].forEach(([c2, o]) => og.addColorStop(o, c2)); x.fillStyle = og; ft(x, "07", wU / 2, wU * .5);
     x.fillStyle = "#5B6B37"; fnt(x, 400, wU * .16, '"Cormorant Italic"'); ft(x, "Sábado", wU / 2, wU * .84);
     x.fillStyle = "#B5577A"; fnt(x, 600, wU * .05, CIN, .16); ft(x, "2026 · 8:00 P. M.", wU / 2, wU * .99);
-    x.drawImage(lazoC, wU / 2 - 10, -top, 20, 20 * 23 / 31); return { c, w: wU + 4, h: hU + top + 3 }; };
+    x.drawImage(lazoC, wU / 2 - 10, -top, 20, 20 * 23 / 31); return { c, w: wU + 4, h: hU + top + 3, lam: 1 }; };
 
 
   // fotos de pequeña en marcos de oro
@@ -323,7 +323,7 @@ setTimeout(plan_b, 30000);
     if (im) { const r = Math.max(iw / im.width, ih / im.height), sw = iw / r, sh2 = ih / r; x.drawImage(im, (im.width - sw) / 2, Math.max(0, (im.height - sh2) * .3), sw, sh2, pad, pad, iw, ih); }
     const br = x.createLinearGradient(pad, pad, pad + iw, pad + ih); br.addColorStop(0, "rgba(255,255,255,0)"); br.addColorStop(.45, "rgba(255,255,255,.16)"); br.addColorStop(.55, "rgba(255,255,255,0)"); x.fillStyle = br; x.fillRect(pad, pad, iw, ih);
     x.textAlign = "center"; x.textBaseline = "middle"; x.fillStyle = "#4A3010"; const mm2 = document.createElement("canvas").getContext("2d"); mm2.font = `400 46px "Cormorant Italic"`; const tam2 = Math.min(4.4, 4.6 * (wU - 4) / (mm2.measureText(frase).width / 10)); fnt(x, 400, tam2, '"Cormorant Italic"'); ft(x, frase, wU / 2, ih + pad + capH / 2 + .4);
-    x.drawImage(lazoC, wU / 2 - 8, -top + .3, 16, 16 * 23 / 31); return { c, w: wU + 4, h: H + top + 3, oro: 1 }; };
+    x.drawImage(lazoC, wU / 2 - 8, -top + .3, 16, 16 * 23 / 31); return { c, w: wU + 4, h: H + top + 3, oro: 1, lam: 1 }; };
 
   /* ================= WebGL ================= */
   const vs = `attribute vec2 p;varying vec2 uv;uniform mat4 m;void main(){uv=vec2(p.x+.5,.5-p.y);gl_Position=m*vec4(p,0.,1.);}`;
@@ -354,7 +354,9 @@ setTimeout(plan_b, 30000);
   const desde = (r, o) => obj(textura(r.c), Object.assign({ w: r.w * (o.esc || 1), h: r.h * (o.esc || 1) }, o, r.oro ? { oro: 1 } : {}));
   const svgObj = async (vb, cuerpo, wU, hU, o) => { const c = await deSvg(vb, cuerpo, wU, hU); return obj(textura(c), Object.assign({ w: wU, h: hU }, o)); };
   // grosor de verdad: copias detrás, más oscuras
-  const grueso = (r, o, n = 5, paso = .55) => { const t = textura(r.c); for (let i = n; i >= 1; i--) obj(t, Object.assign({ w: r.w, h: r.h }, o, { z: o.z - i * paso, k: o.canto || [.8 - i * .04, .9 - i * .03, .76 - i * .04], grupo: o })); return obj(t, Object.assign({ w: r.w, h: r.h }, o, r.oro ? { oro: 1 } : {})); };
+  const siluetaOro = (c) => { const k = document.createElement("canvas"); k.width = c.width; k.height = c.height; const g = k.getContext("2d"); g.drawImage(c, 0, 0); g.globalCompositeOperation = "source-in"; const gr = g.createLinearGradient(0, 0, k.width, k.height); [["#8C6B2B", 0], ["#E9CF8A", .3], ["#FFF3CC", .45], ["#C9A14F", .62], ["#F1DB9C", .8], ["#9C7631", 1]].forEach(([cc, oo]) => gr.addColorStop(oo, cc)); g.fillStyle = gr; g.fillRect(0, 0, k.width, k.height); return k; };
+  const grueso = (r, o, n = 5, paso = .55) => { if (r.lam && !lite) { const t = textura(r.c), tO = textura(siluetaOro(r.c)), N = 7, P = .42; for (let i = N; i >= 1; i--) { const l = 1 - i / (N + 1) * .55; obj(tO, Object.assign({ w: r.w, h: r.h }, o, { z: o.z - i * P, k: [l, l * .97, l * .9], grupo: o, oro: 0 })); } return obj(t, Object.assign({ w: r.w, h: r.h }, o, r.oro ? { oro: 1 } : {})); }
+    const t = textura(r.c); for (let i = n; i >= 1; i--) obj(t, Object.assign({ w: r.w, h: r.h }, o, { z: o.z - i * paso, k: o.canto || [.8 - i * .04, .9 - i * .03, .76 - i * .04], grupo: o })); return obj(t, Object.assign({ w: r.w, h: r.h }, o, r.oro ? { oro: 1 } : {})); };
 
   // texturas que se repiten (flores, hojas, corazones, brillos, pétalos)
   P.lima = ["#F6FBEC", "#DDF2BF", "#AEDB7E", "#6FA544"];
@@ -625,6 +627,10 @@ setTimeout(plan_b, 30000);
     // menos flores sueltas pasando: se queda una de cada dos
      }
 
+  // flores de verdad en 3D (pétalos separados e inclinados)
+  { const mapa = [0, 1, 2, 0, 2]; for (const o of objs) { const i = floresT.indexOf(o.tex); if (i >= 0 && !lite) o.f3d = { p: petaloT[mapa[i]], cup: (32 + (o.x * 7 % 14)) * RAD }; } }
+  for (const o of objs) if (o.tex === perlaT) o.oro = 1;   // las perlas también reciben el brillo que pasa
+
   /* ================= cámara ================= */
   const N = 8, barra = $("barra"); barra.innerHTML = "<i></i>".repeat(N); const puntos = [...barra.children];
   const suave = (a, b, t) => { const v = Math.max(0, Math.min(1, (t - a) / (b - a))); return v * v * (3 - 2 * v); };
@@ -726,7 +732,10 @@ setTimeout(plan_b, 30000);
       mt(FIN, PV, w4); if (fuera(FIN)) continue;
       ef(o.sinDof || ahorro ? 0 : dof(d), niebla(d), o.oro && !ahorro ? .5 : 0, ((TT * .32 + o.x * .011 + o.z * .0013) % 2.8) - .7);
       let aa = a; if (o.tw) aa *= .45 + .55 * Math.sin(TT * o.tw * 3 + o.x);
-      dibuja(o.tex, FIN, aa, o.k, o.b);
+      if (o.f3d) { const L = o.w * .52, PW = o.w * .46, cup = o.f3d.cup + Math.sin(TT * .9 + o.x) * .06;
+        for (let pi = 0; pi < 5; pi++) { mt(w4, w3, sZ(q1, pi * 1.2566)); mt(w5, w4, sX(q2, -cup)); mt(w6, w5, sT(q3, 0, L * .5, 0)); mt(w1, w6, sS(q4, PW, L)); mt(FIN, PV, w1); dibuja(o.f3d.p, FIN, aa, o.k, .85); }
+        mt(w4, w3, sT(q1, 0, 0, o.w * .08)); mt(w5, w4, sS(q2, o.w * .26, o.w * .26)); mt(FIN, PV, w5); dibuja(perlaT, FIN, aa, [1, .86, .55], 1); }
+      else dibuja(o.tex, FIN, aa, o.k, o.b);
       if (o.cruz) { mt(w1, sB(q1, o.x, o.y, o.z), sY(q2, TT * (o.spinY || 0) + Math.PI / 2)); mt(w2, w1, sX(q3, o.rx)); mt(w3, w2, sZ(q4, o.rz)); mt(w4, w3, sS(q5, o.w, o.h)); mt(FIN, PV, w4); dibuja(o.tex, FIN, aa, o.k, o.b); }
     }
     // estación y botón final
