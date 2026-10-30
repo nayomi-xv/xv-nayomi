@@ -79,6 +79,16 @@ body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif
 #portal.abre .mp{transform:translate(var(--tx),var(--ty)) rotate(var(--r2)) scale(1.5);opacity:0}
 #portal.abre .mp svg{animation-duration:.13s}
 #desliza{opacity:0}
+#play{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:7;width:46px;height:46px;border-radius:50%;border:1px solid #C9A86A;background:rgba(255,255,250,.9);color:#9E7B43;display:grid;place-items:center;padding:0;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .5s,transform .15s;box-shadow:0 4px 14px rgba(60,90,40,.18);-webkit-tap-highlight-color:transparent}
+body.auto #play{opacity:1;pointer-events:auto}
+#play:active{transform:scale(.94)}
+#play svg{width:18px;height:18px}
+#play .i-play,#play .i-otra{display:none}
+#play[data-m=pausa] .i-pausa,#play[data-m=fin] .i-pausa{display:none}
+#play[data-m=pausa] .i-play,#play[data-m=fin] .i-otra{display:block}
+#estado{position:fixed;left:50%;bottom:calc(44px + env(safe-area-inset-bottom,0px));z-index:6;transform:translate(-50%,8px);padding:9px 18px;border-radius:999px;background:rgba(255,255,250,.92);border:1px solid rgba(201,168,106,.6);font:400 16px/1 "Cormorant Italic",serif;color:#2E4A2C;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .4s,transform .4s;box-shadow:0 4px 14px rgba(60,90,40,.12)}
+#estado.on{opacity:1;transform:translate(-50%,0)}
+body.auto #desliza,body.auto #mano{display:none!important}
 #mano{position:fixed;left:50%;bottom:calc(30px + env(safe-area-inset-bottom,0px));z-index:6;width:min(13vmin,54px);margin-left:calc(min(13vmin,54px) / -2);pointer-events:none;opacity:0;transform:translateY(10px);transition:opacity .5s ease-out,transform .5s ease-out;filter:drop-shadow(0 4px 8px rgba(60,90,40,.25))}
 #mano svg{width:100%;height:auto;display:block;overflow:visible}
 #mano.on{opacity:1;transform:none}
@@ -179,6 +189,7 @@ body.abre.bajo #creditos{animation:none;opacity:0;transition:opacity .3s}
 <g class="dedo" fill="rgba(255,255,250,.75)" stroke="url(#mnO)" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M27,62 V26 a5.5,5.5 0 0 1 11,0 V56 M38,52 a5.5,5.5 0 0 1 11,0 v6 M49,56 a5.5,5.5 0 0 1 11,0 v4 M60,60 a5.5,5.5 0 0 1 11,0 v14 c0,17 -9,28 -24,28 h-5 c-9,0 -14,-4 -19,-11 L11,92 a5.5,5.5 0 0 1 9,-7 l7,8 V60"/></g>
 <circle class="toque" cx="32.5" cy="22" r="7" fill="none" stroke="#C9A14F" stroke-width="1.6"/></svg></div>
 <div id="barra" aria-hidden="true"></div>
+<button id="play" type="button" aria-label="Pausar" data-m="off"><svg class="i-pausa" viewBox="0 0 24 24"><rect x="6" y="5" width="4" height="14" rx="1" fill="currentColor"/><rect x="14" y="5" width="4" height="14" rx="1" fill="currentColor"/></svg><svg class="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg><svg class="i-otra" viewBox="0 0 24 24"><path d="M4 12a8 8 0 1 0 2.4-5.7M4 4v5h5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button><div id="estado" aria-live="polite"></div>
 <div id="sin"><div><p>Tu navegador no puede mostrar el viaje 3D.</p><a href="sobre/">Ver mi invitación</a></div></div>
 
 <script>
@@ -691,7 +702,7 @@ setTimeout(plan_b, 30000);
   const suave = (a, b, t) => { const v = Math.max(0, Math.min(1, (t - a) / (b - a))); return v * v * (3 - 2 * v); };
   const camDe = (p0) => { const p = Math.max(0, (p0 - .02) / .98), s = p * (N - 1), k = Math.min(N - 2, Math.floor(s)), t = s - k; return (k + (k ? suave(.24, .8, t) : suave(.06, .8, t))) * D; };
   const prog = () => { const m = document.documentElement.scrollHeight - innerHeight; return m > 0 ? Math.max(0, Math.min(1, scrollY / m)) : 0; };
-  let viaje = camDe(prog()), mx = 0, my = 0, tmx = 0, tmy = 0, puntero = false, vel = 0;
+  let viaje = camDe(prog()), mx = 0, my = 0, tmx = 0, tmy = 0, puntero = false, vel = 0; window.__reset = () => { viaje = 0; vel = 0; };
   addEventListener("pointermove", (e) => { if (e.pointerType === "mouse") { puntero = true; tmx = e.clientX / innerWidth - .5; tmy = e.clientY / innerHeight - .5; } }, { passive: true });
   addEventListener("deviceorientation", (e) => { if (e.gamma == null) return; puntero = true; tmx = Math.max(-.5, Math.min(.5, e.gamma / 40)); tmy = Math.max(-.5, Math.min(.5, (e.beta - 45) / 50)); }, { passive: true });
 
@@ -707,8 +718,8 @@ setTimeout(plan_b, 30000);
   const frena = (e) => { if (H.classList.contains("cerrado")) e.preventDefault(); };
   addEventListener("touchmove", frena, { passive: false }); addEventListener("wheel", frena, { passive: false });
   const abrir = () => { if (abierto) return; if (!listoYa) { pide = true; return; } abierto = true; scrollTo(0, 0); tAb = performance.now(); portal.classList.add("abre"); document.body.classList.add("abre");
-    setTimeout(() => { scrollTo(0, 0); H.classList.remove("cerrado"); }, quieto ? 0 : 1900); setTimeout(() => { portal.style.display = "none"; }, quieto ? 0 : 1600);
-    if (matchMedia("(pointer: coarse)").matches) setTimeout(() => { if (scrollY < 30 && performance.now() - tAb > 4500) { $("mano").classList.add("on"); document.body.classList.add("mano"); } }, quieto ? 600 : 5200); };
+    setTimeout(() => { scrollTo(0, 0); H.classList.remove("cerrado"); }, quieto ? 0 : 1900); setTimeout(() => { portal.style.display = "none"; }, quieto ? 0 : 1600); if (!quieto) setTimeout(() => window.__auto && window.__auto(), 4300);
+    if (quieto && matchMedia("(pointer: coarse)").matches) setTimeout(() => { if (scrollY < 30 && performance.now() - tAb > 4500) { $("mano").classList.add("on"); document.body.classList.add("mano"); } }, quieto ? 600 : 5200); };
   addEventListener("scroll", () => { if (H.classList.contains("cerrado")) { if (scrollY) scrollTo(0, 0); return; } if (scrollY > 60) document.body.classList.add("bajo"); }, { passive: true });
   ["pointerdown", "keydown"].forEach((ev) => addEventListener(ev, abrir, { passive: true }));
   // matrices reutilizables: no se crea nada nuevo en cada cuadro (sin pausas del recolector de basura)
@@ -802,6 +813,30 @@ setTimeout(plan_b, 30000);
     const e = Math.round(viaje / D); if (e !== est) { est = e; puntos.forEach((x, i) => x.classList.toggle("on", i === e)); }
     requestAnimationFrame(cuadro);
   };
+  // ===== AUTOMÁTICO: avanza solo como un video; tocar la pantalla pausa o continúa =====
+  { const play = $("play"), est = $("estado"), HOLD = [4.5, 4, 5.5, 7, 8, 5, 6.5], MOVE = 3.2;
+    let modo = "off", u = 0, espera = 0, t0 = 0, tocT = 0, tx = 0, ty = 0;
+    const maxS = () => document.documentElement.scrollHeight - innerHeight;
+    const uDe = () => { const p = maxS() > 0 ? scrollY / maxS() : 0; return Math.max(0, Math.min(N - 1, (p - .02) / .98 * (N - 1))); };
+    const pon = () => { const y = Math.round((u > 0 ? .02 + .98 * u / (N - 1) : 0) * maxS()); if (Math.abs(scrollY - y) >= 1) scrollTo(0, y); };
+    const muestra = (txt, fijo) => { est.textContent = txt; est.classList.add("on"); clearTimeout(est._t); if (!fijo) est._t = setTimeout(() => est.classList.remove("on"), 2800); };
+    const icono = () => { play.dataset.m = modo; play.setAttribute("aria-label", modo === "play" ? "Pausar" : modo === "fin" ? "Ver otra vez" : "Continuar"); };
+    const paso = (now) => { if (modo !== "play") return; const dt = Math.min(.1, (now - t0) / 1000); t0 = now;
+      if (espera > 0) espera -= dt;
+      else { const sig = Math.floor(u + 1e-6) + 1; u = Math.min(sig, u + dt / MOVE); if (u >= sig - 1e-6) { u = sig; if (sig >= N - 1) { modo = "fin"; icono(); pon(); muestra("Toca ↺ para verla otra vez", false); return; } espera = HOLD[sig] || 5; } }
+      pon(); requestAnimationFrame(paso); };
+    const jugar = () => { const u2 = uDe(); if (Math.abs(u2 - u) > .05) { u = u2; if (Math.abs(u - Math.round(u)) < .05) { u = Math.round(u); espera = 1.5; } } modo = "play"; icono(); t0 = performance.now(); est.classList.remove("on"); requestAnimationFrame(paso); };
+    const pausa = (msg) => { if (modo !== "play") return; modo = "pausa"; icono(); muestra(msg || "En pausa · toca para continuar", true); };
+    window.__auto = () => { document.body.classList.add("auto"); u = 0; espera = HOLD[0]; modo = "play"; icono(); t0 = performance.now(); requestAnimationFrame(paso); muestra("Toca la pantalla para pausar", false); };
+    play.addEventListener("click", (e) => { e.stopPropagation(); if (!document.body.classList.contains("auto")) return;
+      if (modo === "play") pausa(); else if (modo === "fin") { scrollTo(0, 0); if (window.__reset) window.__reset(); u = 0; espera = HOLD[0]; modo = "play"; icono(); t0 = performance.now(); est.classList.remove("on"); requestAnimationFrame(paso); } else jugar(); });
+    addEventListener("pointerdown", (e) => { tocT = performance.now(); tx = e.clientX; ty = e.clientY; }, { passive: true });
+    addEventListener("pointerup", (e) => { if (!document.body.classList.contains("auto") || (e.target.closest && e.target.closest("#play"))) return;
+      if (performance.now() - tocT < 450 && Math.hypot(e.clientX - tx, e.clientY - ty) < 12) { if (modo === "play") pausa(); else if (modo === "pausa") jugar(); } }, { passive: true });
+    addEventListener("touchmove", () => pausa("En pausa · toca para que siga solo"), { passive: true });
+    addEventListener("wheel", () => pausa("En pausa · toca para que siga solo"), { passive: true });
+    addEventListener("keydown", (e) => { if (e.key === " " && document.body.classList.contains("auto")) { e.preventDefault(); play.click(); } });
+  }
   listoYa = true; window.__ok = 1; const toca = $("toca"); toca.textContent = "Toca para empezar"; toca.classList.add("ok"); portal.classList.add("vivo"); if (pide) abrir();
   requestAnimationFrame(cuadro);
   setTimeout(() => arcos(), 600);   // los arcos se preparan cuando ya se ve la invitación
