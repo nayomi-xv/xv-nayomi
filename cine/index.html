@@ -21,7 +21,7 @@
 *{box-sizing:border-box}
 html{background:#D6EAC8}
 body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif;overflow-x:hidden;-webkit-tap-highlight-color:transparent}
-#largo{height:600vh}
+#largo{height:700vh}
 #fondo{position:fixed;inset:0;z-index:0;background:#D6EAC8 center/cover}
 #fondo::after{content:"";position:absolute;inset:0;background:radial-gradient(55% 35% at 12% 8%,rgba(248,190,212,.38),transparent 70%),radial-gradient(55% 35% at 92% 88%,rgba(248,190,212,.4),transparent 70%),radial-gradient(70% 55% at 50% 45%,rgba(255,255,250,.35),transparent 70%),radial-gradient(80% 60% at 50% 50%,transparent 55%,rgba(90,130,70,.25))}
 #gl{position:fixed;left:0;top:0;width:100vw;height:100vh;height:100dvh;z-index:1;pointer-events:none;display:block}
@@ -436,7 +436,7 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   /* ================= cámara ================= */
   const N = 7, barra = $("barra"); barra.innerHTML = "<i></i>".repeat(N); const puntos = [...barra.children];
   const suave = (a, b, t) => { const v = Math.max(0, Math.min(1, (t - a) / (b - a))); return v * v * (3 - 2 * v); };
-  const camDe = (p0) => { const p = Math.max(0, (p0 - .02) / .98), s = p * (N - 1), k = Math.min(N - 2, Math.floor(s)), t = s - k; return (k + suave(.1, .9, t)) * D; };
+  const camDe = (p0) => { const p = Math.max(0, (p0 - .02) / .98), s = p * (N - 1), k = Math.min(N - 2, Math.floor(s)), t = s - k; return (k + suave(.24, .8, t)) * D; };
   const prog = () => { const m = document.documentElement.scrollHeight - innerHeight; return m > 0 ? Math.max(0, Math.min(1, scrollY / m)) : 0; };
   let viaje = camDe(prog()), mx = 0, my = 0, tmx = 0, tmy = 0, puntero = false, vel = 0;
   addEventListener("pointermove", (e) => { if (e.pointerType === "mouse") { puntero = true; tmx = e.clientX / innerWidth - .5; tmy = e.clientY / innerHeight - .5; } }, { passive: true });
@@ -477,7 +477,7 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
     const raw = (now - last) / 1000, dt = Math.min(.05, raw); last = now; TT += dt;
     if (abierto && raw < .25) { desde0 += raw; if (desde0 > 2.5) { fq += raw; fn++; if (fn >= 45) { if (fq / fn > 1 / 40 && DPR > 1 && bajadas < 3) { DPR = Math.max(1, DPR * .8); bajadas++; tam(); } fq = 0; fn = 0; } } }
     const tz = camDe(prog()), antes = viaje;
-    viaje = quieto ? tz : viaje + (tz - viaje) * Math.min(1, dt * 15); if (Math.abs(tz - viaje) < .02) viaje = tz;
+    viaje = quieto ? tz : viaje + (tz - viaje) * Math.min(1, dt * 12); if (Math.abs(tz - viaje) < .02) viaje = tz;
     vel += ((viaje - antes) / Math.max(dt, .001) - vel) * .1;
     if (!puntero) { tmx = 0; tmy = 0; }
     mx += (tmx - mx) * .08; my += (tmy - my) * .08;
