@@ -219,7 +219,7 @@ setTimeout(plan_b, 30000);
   const vmin = () => Math.min(VW, VH);
   const HW = () => 50 * VW / vmin(), HH = () => 50 * VH / vmin();
   const ancho = VW / VH > 1.15;
-  let DPR = Math.min(lite ? 1.5 : 2, devicePixelRatio || 1);
+  let DPR = Math.min(lite ? 1.5 : (Math.min(innerWidth, innerHeight) < 600 ? 1.75 : 2), devicePixelRatio || 1);
   const PXU = Math.min(14, vmin() / 100 * DPR * (Math.min(innerWidth, innerHeight) < 600 ? .9 : 1.15));  // pixeles de textura por unidad
   const rnd = (a, b) => a + Math.random() * (b - a);
 
@@ -446,7 +446,7 @@ setTimeout(plan_b, 30000);
   const alfT = textura(await deSvg("0 0 200 100", '<defs><linearGradient id="af" x1="0" x2="1"><stop offset="0" stop-color="#C9B07A"/><stop offset=".03" stop-color="#E7D6A9"/><stop offset=".05" stop-color="#D9EAD0"/><stop offset=".16" stop-color="#D9EAD0"/><stop offset=".18" stop-color="#C9A86A"/><stop offset=".19" stop-color="#FBF8EF"/><stop offset=".81" stop-color="#FBF8EF"/><stop offset=".82" stop-color="#C9A86A"/><stop offset=".84" stop-color="#D9EAD0"/><stop offset=".95" stop-color="#D9EAD0"/><stop offset=".97" stop-color="#E7D6A9"/><stop offset="1" stop-color="#C9B07A"/></linearGradient></defs><rect width="200" height="100" fill="url(#af)"/>' + [25, 75].map((yy) => `<path d="M100,${yy - 9} L106,${yy} L100,${yy + 9} L94,${yy} Z" fill="none" stroke="#D9C08A" stroke-width="1.2"/><circle cx="100" cy="${yy}" r="1.8" fill="#E6B8C8"/>`).join("") + '<path d="M44,0 V100 M156,0 V100" stroke="#C9A86A" stroke-opacity=".5" stroke-width=".8" stroke-dasharray="3 5"/>', 22, 11));
   const AW = ancho ? hw * .62 : hw * .88, AL = 20;
   for (let zz = ZP + 10; zz > -7 * D - 90; zz -= AL - .4) { obj(alfT, { y: -YC, z: zz, w: AW, h: AL, rx: -90 * RAD - Math.atan(.16), ini: 300, sal: 1, b: 1, alf: 1 });
-    for (let j = 0; j < (lite ? 1 : 2); j++) obj(petaloT[j % 3], { x: rnd(-.45, .45) * AW, y: -YC + .06, z: zz + rnd(-9, 9), w: rnd(2, 3.2), h: 0, rx: -90 * RAD, rz: rnd(0, 6.3), ini: 260, sal: 2, b: 1, deco: 1, alf: 1 }); }
+    for (let j = 0; j < (lite ? 1 : 2); j++) obj(petaloT[j % 3], { deco: j ? 1 : 0, x: rnd(-.45, .45) * AW, y: -YC + .06, z: zz + rnd(-9, 9), w: rnd(2, 3.2), h: 0, rx: -90 * RAD, rz: rnd(0, 6.3), ini: 260, sal: 2, b: 1, deco: 1, alf: 1 }); }
 
   // ===== CRONÓMETRO (se dibuja de nuevo cada segundo) =====
   const META = new Date("2026-11-07T20:00:00-05:00").getTime();
@@ -472,7 +472,7 @@ setTimeout(plan_b, 30000);
     const n2 = Math.round((H - r - m) / 16); for (let i = 1; i <= n2; i++) { const y = r + (H - r - m) * i / n2; perla(m, y); perla(W - m, y); }
     const banda = await deSvg(`-10 -10 ${W + 20} ${H + 20}`, `<path d="${A(0)} ${A(b)}" fill-rule="evenodd" fill="url(#oro)"/>`, arcoW + 2, arcoH + 2);
     const c = await deSvg(`-10 -10 ${W + 20} ${H + 20}`, `<path d="${A(b)}" fill="rgba(255,255,252,.5)"/><path d="${A(0)} ${A(b)}" fill-rule="evenodd" fill="url(#oro)" stroke="#A9853C" stroke-width="1"/><path d="${A(b + 14)}" fill="none" stroke="#C9A14F" stroke-opacity=".6" stroke-width="1.2"/>` + p, arcoW + 2, arcoH + 2);
-    const tb = textura(banda); for (const [dz, e2] of [[22, 1.02], [44, 1.04], [66, 1.06], [100, 1.08], [136, 1.1], [174, 1.12], [214, 1.14], [256, 1.16]]) obj(tb, { z: z - 8 + dz, w: (arcoW + 2) * e2, h: (arcoH + 2) * e2, sal: 4, ini: 250, oro: 1 });
+    const tb = textura(banda); for (const [dz, e2] of [[22, 1.02], [44, 1.04], [66, 1.06], [100, 1.08], [136, 1.1], [174, 1.12], [214, 1.14], [256, 1.16]]) obj(tb, { z: z - 8 + dz, w: (arcoW + 2) * e2, h: (arcoH + 2) * e2, sal: dz > 80 ? 30 : 4, ini: 250, oro: 1 });
     for (let i = (lite ? 2 : 4); i >= 1; i--) obj(tb, { z: z - 8 - i * .9, w: arcoW + 2, h: arcoH + 2, k: [.9 - i * .03, .82 - i * .03, .62 - i * .03], sal: 16 });
     obj(textura(c), { z: z - 8, w: arcoW + 2, h: arcoH + 2, sal: 16 }); }
   desde(texto("TE INVITO A CELEBRAR MIS", { t: ancho ? 2.8 : 3.3, peso: 600, esp: .26, col: "#B5577A" }), { y: ancho ? 30.5 : hh * .45, z, sal: 30 });
@@ -641,7 +641,7 @@ setTimeout(plan_b, 30000);
 
   // luz de cine: rayos detrás y bokeh delante
   for (let e = 0; e < 8; e++) { const z0 = -e * D;
-    for (let j = 0; j < (lite ? 2 : 3); j++) obj(rayoT, { x: (j - 1) * hw * .55 + rnd(-6, 6), y: hh * 1.05, z: z0 - 46 - j * 6, w: rnd(26, 38), h: hh * 2.6, rz: (j - 1) * -16 * RAD + rnd(-.08, .08), a: rnd(.22, .34), b: 1, ini: 240, sal: 6, rayo: rnd(0, 6), deco: 1, sinDof: 1 });
+    for (let j = 0; j < 0; j++) obj(rayoT, { x: (j - 1) * hw * .55 + rnd(-6, 6), y: hh * 1.05, z: z0 - 46 - j * 6, w: rnd(26, 38), h: hh * 2.6, rz: (j - 1) * -16 * RAD + rnd(-.08, .08), a: rnd(.22, .34), b: 1, ini: 240, sal: 6, rayo: rnd(0, 6), deco: 1, sinDof: 1 });
     for (let j = 0; j < (lite ? 4 : 10); j++) { const dd = rnd(22, 64), k = dd / 100; if (0) obj(bokehT[j % 4], { x: rnd(-.95, .95) * hw * k, y: rnd(-.9, .9) * hh * k, z: z0 + 100 - dd, w: rnd(3, 7.5) * k * 3, h: 0, a: rnd(.35, .7), b: 1, ini: 200, sal: 2, flota: rnd(0, 6), deco: 1, sinDof: 1 }); } }
 
   for (let e = 0; e < 8; e++) for (let j = 0; j < (lite ? 2 : 6); j++) obj(perlaT, { x: rnd(-.9, .9) * hw, y: rnd(-.85, .85) * hh, z: -e * D + rnd(-10, 18), w: rnd(1.6, 2.8), h: 0, ini: 210, sal: 8, flota: rnd(0, 6), deco: 1 });
@@ -733,6 +733,7 @@ setTimeout(plan_b, 30000);
   let abreP = 0, crUlt = 0, fq = 0, fn = 0, bajadas = 0, desde0 = 0, nCu = 0, ahorro = lite, frV = -1, fovV = -1; const franjas = document.createElement("i");
   const cuadro = (now) => {
     if (!abierto && nCu > 2) { last = now; requestAnimationFrame(cuadro); return; } nCu++;
+    if (ahorro && now - last < 30) { requestAnimationFrame(cuadro); return; }
     const raw = (now - last) / 1000, dt = Math.min(.05, raw); last = now; TT += dt;
     if (abierto && raw < .25) { desde0 += raw; if (desde0 > 2.5) { fq += raw; fn++; if (fn >= 45) { if (fq / fn > 1 / 40) { if (DPR > 1 && bajadas < 3) { DPR = Math.max(1, DPR * .8); bajadas++; tam(); } else ahorro = true; } fq = 0; fn = 0; } } }
     const tz = camDe(prog()), antes = viaje;
