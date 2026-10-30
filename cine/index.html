@@ -268,6 +268,13 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   const floresT = flores.map(textura);
   const coraT = textura(await deSvg("-12 -11 24 22", '<path d="M0,9 C-14,0 -11,-11 -4,-10 C-1,-10 0,-7 0,-6 C0,-7 1,-10 4,-10 C11,-11 14,0 0,9 Z" fill="url(#joyaR)" stroke="#FFE1EC" stroke-opacity=".7" stroke-width=".8"/><circle cx="-4" cy="-5" r="1.6" fill="#fff" opacity=".8"/>', 7, 6.4));
   const perlaT = textura(await deSvg("-10 -10 20 20", '<circle r="9" fill="url(#perlaG)"/><circle cx="-3" cy="-3" r="2.4" fill="#fff" opacity=".9"/>', 3, 3));
+  const globo = (a1, a2, a3) => `<defs><radialGradient id="gb${a2.slice(1)}" cx=".36" cy=".3" r=".75"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".18" stop-color="${a1}"/><stop offset=".7" stop-color="${a2}"/><stop offset="1" stop-color="${a3}"/></radialGradient></defs><path d="M0,-58 C32,-58 44,-30 40,-6 C36,22 14,40 0,44 C-14,40 -36,22 -40,-6 C-44,-30 -32,-58 0,-58 Z" fill="url(#gb${a2.slice(1)})"/><path d="M-4,44 L4,44 L6,52 L-6,52 Z" fill="${a3}"/><path d="M0,52 C8,64 -8,74 2,86 C10,96 -6,104 0,116" stroke="#C9A14F" stroke-width="1.6" fill="none"/><ellipse cx="-16" cy="-34" rx="7" ry="12" fill="#fff" opacity=".55" transform="rotate(-28 -16 -34)"/>`;
+  const globosT = await Promise.all([["#FFE4EE", "#F2A5C0", "#C9628E"], ["#F2FBE9", "#B9E0A0", "#6FA544"], ["#FFFDF6", "#F6E7C8", "#C9A14F"]].map(([a1, a2, a3]) => deSvg("-46 -62 92 182", globo(a1, a2, a3), 8, 15.8).then(textura)));
+  const LZ = '<g transform="translate(0 150) scale(.32)">' + LAZO + '</g>';
+  const racimoT = await Promise.all([0, 1].map((v) => { const g = [["#FFE4EE", "#F2A5C0", "#C9628E"], ["#F2FBE9", "#B9E0A0", "#6FA544"], ["#FFFDF6", "#F6E7C8", "#C9A14F"]]; const o = v ? [1, 0, 2] : [0, 2, 1];
+    const b = (i, x, y, r) => `<g transform="translate(${x} ${y}) rotate(${r})">${globo(...g[o[i]])}</g>`;
+    return deSvg("-100 -70 200 250", b(0, -44, 6, -12) + b(2, 46, 0, 12) + b(1, 0, -12, 0) + '<path d="M-44,62 C-30,100 -6,130 0,150 M46,56 C30,100 6,130 0,150 M0,44 C4,90 -4,120 0,150" stroke="#C9A14F" stroke-width="1.6" fill="none"/>' + LZ, 20, 25).then(textura); }));
+  const estrellaT = textura(await deSvg("-12 -12 24 24", '<path d="M0,-11 L3.2,-3.6 11,-3.4 4.8,1.6 7,9.4 0,4.9 -7,9.4 -4.8,1.6 -11,-3.4 -3.2,-3.6 Z" fill="url(#oro)" stroke="#8C6B2B" stroke-width=".6"/><path d="M0,-7 L1.6,-2 0,2.6 -1.6,-2 Z" fill="#FFF8E0" opacity=".9"/>', 4, 4));
   const brilloT = textura(await deSvg("-10 -10 20 20", '<path d="M0,-10 L2.2,-2.2 10,0 2.2,2.2 0,10 -2.2,2.2 -10,0 -2.2,-2.2 Z" fill="#FFF1C4"/>', 4, 4));
   const petaloT = await Promise.all([["#FFE4EE", "#E9A2B8"], ["#FFFFFF", "#F1D3DF"], ["#F4FBE8", "#B9DE92"], ["#FFF3C4", "#C9A14F"]].map(([a1, b1]) => deSvg("-12 -12 24 24", `<defs><linearGradient id="pg${a1.slice(1)}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a1}"/><stop offset="1" stop-color="${b1}"/></linearGradient></defs><path d="M0,-11 C7,-9 9,2 0,11 C-9,2 -7,-9 0,-11 Z" fill="url(#pg${a1.slice(1)})"/>`, 3.4, 3.4).then(textura)));
   // mariposa: un ala (se usa dos veces, una al revés)
@@ -289,6 +296,13 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
     else obj(floresT[j % 5], { x, y, z, w: rnd(10, 18), h: 0, rz: rnd(0, 6.28), ry: rnd(-.5, .5), ini: 200, sal: 4, spin: rnd(-.3, .3) });
   } for (let j = 0; j < (lite ? 5 : 12); j++) obj(brilloT, { x: rnd(-1, 1) * hw, y: rnd(-1, 1) * hh, z: z0 - 60 - j * 30, w: rnd(2.4, 4.4), h: 0, ini: 240, sal: 4, tw: rnd(1.5, 3) }); };
   objs.forEach((o) => { if (!o.h) o.h = o.w; });
+
+  // detalles que se reparten
+  const orbita = (cx, cy, z1, R, n, tam, v, inc = .22, tex) => { for (let i = 0; i < n; i++) { const t = tex ? tex[i % tex.length] : (i % 3 === 2 ? perlaT : floresT[i % 5]); obj(t, { x: cx, y: cy, z: z1, w: (t === perlaT ? tam * .45 : tam), h: 0, rz: i * 1.3, spin: (i % 2 ? .4 : -.4), orb: { cx, cy, R, a: i / n * Math.PI * 2, v, inc }, sal: 18 }); } };
+  const globos = (z1, n, sal = 20) => { for (let j = 0; j < (lite ? Math.ceil(n / 2) : n); j++) { const lado = j % 2 ? 1 : -1, d0 = rnd(28, 46), k = (100 + d0) / 100;
+      if (j < 2) { const w = 21 * k; obj(racimoT[j], { x: lado * hw * (ancho ? .7 : .58) * k, y: 0, z: z1 - d0, w, h: w * 1.25, sube: hh * 2.8 * k, ph: j * hh * 1.3 * k + rnd(0, 20), vsube: .5, ini: 230, sal }); }
+      else { const w = rnd(8, 11) * k; obj(globosT[j % 3], { x: lado * hw * rnd(.6, .9) * k, y: 0, z: z1 - d0, w, h: w * 15.8 / 8, sube: hh * 2.8 * k, ph: rnd(0, hh * 2.8 * k), vsube: .6, ini: 230, sal }); } } };
+  const estrellas = (z1, n, sal = 20) => { for (let j = 0; j < n; j++) obj(estrellaT, { x: (j % 2 ? 1 : -1) * hw * rnd(.5, .85), y: rnd(-.7, .7) * hh, z: z1 + rnd(-8, 10), w: rnd(3.4, 5), h: 0, spinY: rnd(.8, 1.6) * (j % 2 ? 1 : -1), b: .8, ini: 210, sal }); };
 
   // 0 · portada
   let z = 0;
@@ -328,6 +342,8 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
     // mariposas posadas en las letras (aletean despacito)
     mari("rosa", "rosa", { x: T0 * .52, y: Y0 + T0 * .44, z: z + 6, s: ancho ? .55 : .7, r: -28, f: 3.2, tilt: 25, amp: 32, sal: 30 });
     mari("lima", "perla", { x: -T0 * .62, y: Y0 - T0 * .12, z: z + 6, s: ancho ? .42 : .52, r: 24, f: 2.6, tilt: 25, amp: 32, sal: 30 });
+    // anillo de florcitas y perlas que gira alrededor del XV
+    orbita(0, Y0 - T0 * .05, z + 2, T0 * .62, lite ? 8 : 12, T0 * .095, .5, .2);
     // brillos que titilan alrededor
     [[-.8, .55], [.85, .2], [-.3, .78], [.4, -.42], [-.72, -.36], [.05, .95], [.95, .7]].forEach(([a1, b1], i) => obj(brilloT, { x: a1 * T0 * .78, y: Y0 + b1 * T0 * .55, z: z + 4.5, w: 2.6 + (i % 3), sal: 30, tw: 1.4 + i * .3 }));
   }
@@ -345,6 +361,8 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   const guirT = textura(guirC);
   const guir = (z1) => obj(guirT, { y: hh * .8, z: z1 + 4, w: 92, h: 14.4, sal: 10, mece: 1 });
 
+  globos(z, 4, 30); estrellas(z, 3, 30);
+
   // 1 · la corona (14 piezas en un aro que gira de verdad)
   z = -D; guir(z);
   { const pz = (osc, i) => { const alto = i % 2 === 0, top = alto ? 4 : 30, joya = alto ? (i % 4 === 0 ? "joyaR" : "joyaC") : "perlaG"; return `<path d="M-1,74 C10,70 17,${top + 30} 25,${top} C33,${top + 30} 40,70 51,74 L51,96 L-1,96 Z" fill="url(#oro)" stroke="#7A5A22" stroke-width=".7"/><path d="M25,${top + 14} C29,${top + 32} 34,58 40,70 M25,${top + 14} C21,${top + 32} 16,58 10,70" fill="none" stroke="#FFF3C8" stroke-opacity=".7" stroke-width="1.2"/><rect x="-1" y="78" width="52" height="14" fill="url(#oro)" stroke="#7A5A22" stroke-width=".6"/><circle cx="25" cy="${top - 1}" r="${alto ? 5.6 : 4}" fill="url(#${joya})" stroke="#7A5A22" stroke-width=".6"/><circle cx="23.4" cy="${top - 2.6}" r="1.4" fill="#fff" opacity=".9"/><circle cx="12" cy="85" r="2.4" fill="url(#perlaG)"/><circle cx="38" cy="85" r="2.4" fill="url(#perlaG)"/><circle cx="25" cy="85" r="3.2" fill="url(#${i % 3 ? "joyaC" : "joyaR"})"/>`; };
@@ -359,6 +377,8 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   vuela("lima", "rosa", z + 12); vuela("rosa", "perla", z + 4);
   jardin(z, 16);
 
+
+  estrellas(z, 4);
 
   // 2 · recuerdos: sus fotos de pequeña
   z = -2 * D; guir(z);
@@ -391,6 +411,8 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   vuela("rosa", "lima", z - 8); vuela("perla", "rosa", z - 14);
   jardin(z, 16);
 
+  orbita(0, hh * .02, z, ancho ? 36 : 40, lite ? 6 : 10, 5.4, .42, .16, [coraT, floresT[0], floresT[2], coraT, floresT[1]]); globos(z, 4);
+
   // 5 · los detalles
   z = -5 * D;
   mari("rosa", "rosa", { x: hw * .7, y: hh * .78, z: z + 8, s: .6, r: -20 });
@@ -410,6 +432,8 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   { const dias = Math.ceil((new Date("2026-11-07T20:00:00-05:00") - Date.now()) / 864e5); desde(texto(dias > 1 ? `FALTAN ${dias} DÍAS` : dias === 1 ? "¡ES MAÑANA!" : "¡HOY ES EL GRAN DÍA!", { t: 3.2, peso: 600, esp: .3, col: "#9C7631" }), { y: hh * .56, z, sal: -99 }); }
   desde({ c: ramoC, w: 48, h: 37.6 }, { x: -hw * .8, y: -hh * .86, z: z + 10, sal: -99 }); desde({ c: ramoC2, w: 48, h: 37.6 }, { x: hw * .8, y: -hh * .86, z: z + 10, sal: -99 });
   mari("rosa", "celeste", { x: -hw * .6, y: hh * .62, z: z + 6, s: .9, r: 20, sal: -99 }); mari("lima", "rosa", { x: hw * .62, y: hh * .7, z: z + 3, s: .75, r: -18, sal: -99 }); vuela("rosa", "perla", z + 8, { sal: -99 }); vuela("lima", "lima", z + 4, { sal: -99 });
+  orbita(0, hh * .34, z + 2, ancho ? 34 : 38, lite ? 8 : 12, 5, .45, .18, [estrellaT, floresT[0], perlaT, floresT[2], coraT, floresT[4]]); globos(z, 6, -99); estrellas(z, 4, -99);
+
   // primer plano: flores y hojas grandes muy cerca de la cámara en las esquinas (se mueven más rápido = se siente la profundidad)
   for (let e = 0; e < 7; e++) { const z0 = -e * D, dd = 42, zz = z0 + 100 - dd, vx = hw * dd / 100, vy = hh * dd / 100, lado = e % 2 ? -1 : 1;
     obj(floresT[(e * 2) % 5], { x: -lado * vx * .92, y: -vy * .9, z: zz, w: 9, h: 9, rz: e, sal: 3, ini: 230, spin: .08 * lado });
@@ -422,6 +446,9 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
 
   // arcos de flores (un solo dibujo, se usa 6 veces)
   const AX = hw * .3, AY = hh * .05;            // la cámara se va de lado y sube un poco a mitad de camino
+  // remolino de brillos alrededor del camino de la cámara
+  for (let k = 0; k < 6; k++) { const n = lite ? 14 : 30; for (let j = 0; j < n; j++) { const u = (j + .5) / n, sv = (k + .12 + u * .76) * D, f = sv / D - k, s1 = Math.sin(Math.PI * f) ** 2, cx = (k % 2 ? -1 : 1) * AX * s1, cy = AY * s1, an = u * Math.PI * 7 + k, rr = 16 + (j % 3) * 5;
+    obj(j % 4 === 0 ? estrellaT : brilloT, { x: cx + Math.cos(an) * rr * (hw / 50), y: cy + Math.sin(an) * rr * (hh / 50) * .8, z: 100 - sv - 8, w: j % 4 === 0 ? 3.2 : rnd(2, 3.4), h: 0, ini: 170, sal: 3, tw: rnd(1.5, 3), spinY: j % 4 === 0 ? 1.4 : 0 }); } }
   const arcos = async () => { const RW = hw * 1.95, RH = hh * 1.8, vw = 1000, vh = Math.round(1000 * RH / RW), ex = 405, ey = vh / 2 - 85; let p = `<ellipse cx="0" cy="0" rx="${ex}" ry="${ey}" fill="none" stroke="#C9A14F" stroke-width="6" stroke-opacity=".85"/><ellipse cx="0" cy="0" rx="${ex - 14}" ry="${ey - 14}" fill="none" stroke="#FFF6D8" stroke-width="2" stroke-opacity=".7"/>`;
     const n = 30, ks = ["rosa", "perla", "lima", "rosa", "lima", "perla"];
     for (let i = 0; i < n; i++) { const t = i / n * Math.PI * 2, x = Math.cos(t) * ex, y = Math.sin(t) * ey, gr = (t * 180 / Math.PI); p += hoja(x, y, 70, gr + 60) + hoja(x, y, 62, gr - 70); }
@@ -497,7 +524,7 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
     mt(VW1, sZ(q1, -roll), sX(q2, my * 12 * RAD + pitch)); mt(VW2, VW1, sY(q3, mx * 18 * RAD + yaw + (1 - ea) * 10 * RAD + Math.sin(TT * .33) * 1.6 * RAD * resp)); mt(VIEW, VW2, sT(q4, -camX2, -camY2, -camZ)); mt(PV, proj, VIEW);
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     nl = 0;
-    for (const o of objs) { const d = camZ - o.z; if (d < 1 || d > o.ini) continue; const a = vis(d, o) * o.a; if (a <= .01) continue; let ds = d; if (o.corona) ds = d - o.corona.R * Math.cos(o.corona.i * Math.PI * 2 / 14 + TT * .45); const it = item(); it.ds = ds; it.o = o; it.a = a; it.tipo = 0; it.d = d; nl++; }
+    for (const o of objs) { const d = camZ - o.z; if (d < 1 || d > o.ini) continue; const a = vis(d, o) * o.a; if (a <= .01) continue; let ds = d; if (o.orb) { const b = o.orb, th = b.a + TT * b.v; ds = d - b.R * Math.cos(th); } else if (o.corona) ds = d - o.corona.R * Math.cos(o.corona.i * Math.PI * 2 / 14 + TT * .45); const it = item(); it.ds = ds; it.o = o; it.a = a; it.tipo = 0; it.d = d; nl++; }
     for (const m of maris) { const d = camZ - m.z; if (d < 1 || d > m.ini) continue; const a = vis(d, m); if (a > .01) { if (m.vuela) { const v = m.vuela, t = TT * v.v + m.ph, px = m.x0 + Math.sin(t) * v.ax, py = m.y0 + Math.sin(t * 1.7) * v.ay; m.r = Math.atan2(Math.cos(t * 1.7) * v.ay * 1.7, Math.cos(t) * v.ax) / RAD - 90; m.r = Math.max(-60, Math.min(60, ((m.r + 540) % 360) - 180)); m.x = px; m.y = py; } const it = item(); it.ds = d; it.o = m; it.a = a; it.tipo = 1; it.d = d; nl++; } }
     for (const p of petalos) { p.y += p.vy * dt; p.x += p.vx * dt; p.rx += p.sx * dt; p.ry += p.sy * dt; if (p.y < -hh * 1.3) p.y = hh * 1.3; const d = camZ - p.z; if (d > 2 && d < 300) { const it = item(); it.ds = d; it.o = p; it.a = Math.min(1, (300 - d) / 60, (d - 2) / 8) * .85; it.tipo = 2; it.d = d; nl++; } }
     lista.length = nl; for (let i = 0; i < nl; i++) lista[i] = pool[i];
@@ -510,12 +537,13 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
         mt(w3, BASE, sY(q1, fl)); mt(w4, w3, sT(q2, -4.5, 0, 0)); mt(w5, w4, sS(q3, -9, 13.2)); mt(FIN, PV, w5); dibuja(o.L, FIN, a, K1, 1);
         mt(w4, BASE, sT(q2, 0, 1, .1)); mt(w5, w4, sS(q3, 1.6, 8)); mt(FIN, PV, w5); dibuja(cuerpoT, FIN, a, K1, 1); continue; }
       if (tipo === 2) { mt(w1, sT(q1, o.x, o.y, o.z), sX(q2, o.rx)); mt(w2, w1, sY(q3, o.ry)); mt(w3, w2, sS(q4, o.s, o.s)); mt(FIN, PV, w3); if (fuera(FIN)) continue; dibuja(o.t, FIN, a, K1, .8); continue; }
-      if (o.corona) { const c = o.corona, th = c.i * Math.PI * 2 / 14 + TT * .45; mt(w1, sT(q1, 0, c.y, o.z), sX(q2, 14 * RAD)); mt(w2, w1, sY(q3, th)); mt(w3, w2, sT(q4, 0, 0, c.R)); mt(w4, w3, sS(q5, o.w, o.h)); }
+      if (o.orb) { const b = o.orb, th = b.a + TT * b.v, cz = Math.cos(th); mt(w1, sT(q1, b.cx + b.R * Math.sin(th), b.cy - cz * b.R * b.inc, o.z + b.R * cz), sZ(q2, o.rz + TT * (o.spin || 0))); mt(w4, w1, sS(q5, o.w, o.h)); }
+      else if (o.corona) { const c = o.corona, th = c.i * Math.PI * 2 / 14 + TT * .45; mt(w1, sT(q1, 0, c.y, o.z), sX(q2, 14 * RAD)); mt(w2, w1, sY(q3, th)); mt(w3, w2, sT(q4, 0, 0, c.R)); mt(w4, w3, sS(q5, o.w, o.h)); }
       else { let ry = o.ry, rx = o.rx, rz = o.rz;
         if (o.gira) { ry += Math.max(0, Math.min(1, (d - 100) / 160)) * 62 * RAD * (o.x > 0 ? -1 : 1); rx += vt * 9 * RAD; }   // llegan girando y se inclinan con la velocidad
         if (o.balancea) ry += Math.sin(TT * .7) * 5 * RAD;
         if (o.spin) rz += TT * o.spin; if (o.spinY) ry = TT * o.spinY;
-        let y = o.y + (o.mece ? Math.sin(TT * 1.1) * .6 : 0); if (o.sube) { const L = o.sube; y += ((TT * 4 + o.ph) % L) - L / 2; rz += Math.sin(TT * 1.4 + o.ph) * .25; }
+        let y = o.y + (o.mece ? Math.sin(TT * 1.1) * .6 : 0); if (o.sube) { const L = o.sube; y += ((TT * 4 * (o.vsube || 1) + o.ph) % L) - L / 2; rz += Math.sin(TT * (o.vsube ? .8 : 1.4) + o.ph) * (o.vsube ? .12 : .25); }
         mt(w1, sT(q1, o.x, y, o.z), sY(q2, ry)); mt(w2, w1, sX(q3, rx)); mt(w3, w2, sZ(q4, rz)); mt(w4, w3, sS(q5, o.w, o.h)); }
       mt(FIN, PV, w4); if (fuera(FIN)) continue;
       let aa = a; if (o.tw) aa *= .45 + .55 * Math.sin(TT * o.tw * 3 + o.x);
