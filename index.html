@@ -67,7 +67,7 @@ body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif
 html.cerrado,html.cerrado body{overflow:hidden;overscroll-behavior:none}
 #portal{touch-action:none}
 @media (min-aspect-ratio:23/20){#portal .ani{--aw:min(74vmin,620px);top:53%}#portal .sel,#portal .mp{top:53%}#portal .sel{width:30vmin}#portal .tit{top:3.5vh}#desliza{left:auto;right:28px}}
-body.abre #desliza{opacity:1;transition:opacity .6s ease-out 1.4s}
+body.abre #desliza{opacity:1;transition:opacity .5s ease-out .8s}
 body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
 #desliza{position:fixed;left:0;right:0;bottom:calc(40px + env(safe-area-inset-bottom,0px));z-index:5;text-align:center;font:600 13px/1 "Outfit",sans-serif;letter-spacing:.3em;text-transform:uppercase;color:var(--rosa-t);pointer-events:none;transition:opacity .5s}
 #desliza b{display:block;margin:10px auto 0;width:2px;height:28px;background:linear-gradient(var(--oro-t),transparent);animation:baja 1.6s ease-in-out infinite}
@@ -438,7 +438,7 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   /* ================= cámara ================= */
   const N = 7, barra = $("barra"); barra.innerHTML = "<i></i>".repeat(N); const puntos = [...barra.children];
   const suave = (a, b, t) => { const v = Math.max(0, Math.min(1, (t - a) / (b - a))); return v * v * (3 - 2 * v); };
-  const camDe = (p0) => { const p = Math.max(0, (p0 - .02) / .98), s = p * (N - 1), k = Math.min(N - 2, Math.floor(s)), t = s - k; return (k + suave(.24, .8, t)) * D; };
+  const camDe = (p0) => { const p = Math.max(0, (p0 - .02) / .98), s = p * (N - 1), k = Math.min(N - 2, Math.floor(s)), t = s - k; return (k + (k ? suave(.24, .8, t) : suave(.06, .8, t))) * D; };
   const prog = () => { const m = document.documentElement.scrollHeight - innerHeight; return m > 0 ? Math.max(0, Math.min(1, scrollY / m)) : 0; };
   let viaje = camDe(prog()), mx = 0, my = 0, tmx = 0, tmy = 0, puntero = false, vel = 0;
   addEventListener("pointermove", (e) => { if (e.pointerType === "mouse") { puntero = true; tmx = e.clientX / innerWidth - .5; tmy = e.clientY / innerHeight - .5; } }, { passive: true });
@@ -456,7 +456,7 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   const frena = (e) => { if (H.classList.contains("cerrado")) e.preventDefault(); };
   addEventListener("touchmove", frena, { passive: false }); addEventListener("wheel", frena, { passive: false });
   const abrir = () => { if (abierto) return; if (!listoYa) { pide = true; return; } abierto = true; scrollTo(0, 0); tAb = performance.now(); portal.classList.add("abre"); document.body.classList.add("abre");
-    setTimeout(() => { portal.style.display = "none"; scrollTo(0, 0); H.classList.remove("cerrado"); }, quieto ? 0 : 1900); };
+    setTimeout(() => { scrollTo(0, 0); H.classList.remove("cerrado"); }, quieto ? 0 : 850); setTimeout(() => { portal.style.display = "none"; }, quieto ? 0 : 1600); };
   addEventListener("scroll", () => { if (H.classList.contains("cerrado")) { if (scrollY) scrollTo(0, 0); return; } if (scrollY > 60) document.body.classList.add("bajo"); }, { passive: true });
   ["pointerdown", "keydown"].forEach((ev) => addEventListener(ev, abrir, { passive: true }));
   // matrices reutilizables: no se crea nada nuevo en cada cuadro (sin pausas del recolector de basura)
@@ -490,7 +490,7 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
     // cámara: entre escena y escena vuela en curva hacia un lado, sube, gira hacia donde va y se ladea
     const sv = viaje / D, kk = Math.floor(sv), f = sv - kk, sg = kk % 2 ? -1 : 1, s1 = Math.sin(Math.PI * f), s2 = Math.sin(2 * Math.PI * f);
     const camX = sg * AX * s1 * s1, camY = AY * s1 * s1, yaw = Math.atan(sg * AX * Math.PI * s2 / D) * .85, pitch = -Math.atan(AY * Math.PI * s2 / D) * .6;
-    const ka = abierto ? Math.min(1, (now - tAb) / 1800) : 0, ea = 1 - Math.pow(1 - ka, 3), dolly = quieto ? 0 : (1 - ea) * 85;
+    const ka = abierto ? Math.min(1, (now - tAb) / 1250) : 0, ea = 1 - Math.pow(1 - ka, 3), dolly = quieto ? 0 : (1 - ea) * 85;
     const resp = quieto ? 0 : 1; const camX2 = camX + Math.sin(TT * .33) * 2.2 * resp, camY2 = camY + Math.sin(TT * .27 + 1) * 1.2 * resp;
     const camZ = 100 - viaje + dolly, roll = Math.max(-1, Math.min(1, vel / 900)) * 2.2 * RAD - yaw * .55;
     const vt = Math.max(-1, Math.min(1, vel / 700));
