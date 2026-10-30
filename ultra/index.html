@@ -120,12 +120,17 @@ body.abre.bajo #creditos{animation:none;opacity:0;transition:opacity .3s}
 <div id="sin"><div><p>Tu navegador no puede mostrar el viaje 3D.</p><a href="../sobre/">Ver mi invitación</a></div></div>
 
 <script>
+const RESP = location.pathname.includes("/ultra") ? "../cine/" : "cine/";
+const plan_b = () => { if (window.__ok) return; location.replace(RESP); };
+setTimeout(() => { if (!window.__ok) { const t = document.getElementById("toca"); if (t) { t.innerHTML = '<a href="' + RESP + '" style="color:inherit">Toca aquí si no carga</a>'; t.style.pointerEvents = "auto"; } } }, 9000);
+setTimeout(plan_b, 20000);
 (async () => {
   const $ = (id) => document.getElementById(id);
   const quieto = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const cv = $("gl");
   const gl = cv.getContext("webgl", { alpha: true, premultipliedAlpha: true, antialias: true, powerPreference: "high-performance" }) || cv.getContext("experimental-webgl");
   if (!gl) { $("sin").style.display = "grid"; $("portal").style.display = "none"; return; }
+  cv.addEventListener("webglcontextlost", () => { window.__ok = 0; plan_b(); });
   const lite = (navigator.hardwareConcurrency || 8) <= 2 || (navigator.deviceMemory || 8) <= 2 || /[?&]liviano/.test(location.search);
 
   const UP = "M2,-6 C8,-34 36,-58 60,-47 C74,-39 70,-14 51,-2 C35,6 14,4 2,-2 Z", LO = "M2,0 C18,2 45,6 51,24 C56,43 39,53 24,47 C10,41 4,20 2,4 Z";
@@ -152,17 +157,18 @@ body.abre.bajo #creditos{animation:none;opacity:0;transition:opacity .3s}
   const HW = () => 50 * VW / vmin(), HH = () => 50 * VH / vmin();
   const ancho = VW / VH > 1.15;
   let DPR = Math.min(lite ? 1.5 : 2, devicePixelRatio || 1);
-  const PXU = Math.min(14, vmin() / 100 * DPR * 1.15);  // pixeles de textura por unidad
+  const PXU = Math.min(14, vmin() / 100 * DPR * ((/iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1)) ? .95 : 1.15));  // pixeles de textura por unidad
   const rnd = (a, b) => a + Math.random() * (b - a);
 
   /* ================= texturas: se dibujan UNA vez ================= */
   const MAXT = gl.getParameter(gl.MAX_TEXTURE_SIZE);
   const ANI = gl.getExtension("EXT_texture_filter_anisotropic") || gl.getExtension("WEBKIT_EXT_texture_filter_anisotropic"), ANIM = ANI ? Math.min(lite ? 2 : 8, gl.getParameter(ANI.MAX_TEXTURE_MAX_ANISOTROPY_EXT)) : 1;
-  const P2 = (n) => Math.min(Math.min(MAXT, 2048), 1 << Math.max(2, Math.round(Math.log2(Math.max(4, n)))));
+  const IOS = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1), TOPE = Math.min(MAXT, IOS || lite ? 1024 : 2048);
+  const P2 = (n) => Math.min(TOPE, 1 << Math.max(2, Math.floor(Math.log2(Math.max(4, n)) + .25)));
   const textura = (c) => { const t = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, t);
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true);
     const W2 = P2(c.width), H2 = P2(c.height); let src = c; if (W2 !== c.width || H2 !== c.height) { src = document.createElement("canvas"); src.width = W2; src.height = H2; const g2 = src.getContext("2d"); g2.imageSmoothingQuality = "high"; g2.drawImage(c, 0, 0, W2, H2); }
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src); gl.generateMipmap(gl.TEXTURE_2D); if (ANI) gl.texParameterf(gl.TEXTURE_2D, ANI.TEXTURE_MAX_ANISOTROPY_EXT, ANIM);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, src); gl.generateMipmap(gl.TEXTURE_2D); if (src !== c) { src.width = src.height = 0; } if (ANI) gl.texParameterf(gl.TEXTURE_2D, ANI.TEXTURE_MAX_ANISOTROPY_EXT, ANIM);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
     return t; };
@@ -486,7 +492,7 @@ body.abre.bajo #creditos{animation:none;opacity:0;transition:opacity .3s}
   desde(texto("Jr. San Juan Bautista 363, Comas", { t: ancho ? 4 : 4.4, fam: "ita", col: "#B5577A" }), { y: -hh * .04, z, sal: -99 });
   if (ancho) { obj(ramT, { x: -hw * .76, y: -hh * .05, z: z + 2, w: 44, h: 17.6, sal: -99, b: 1 }); obj(ramT, { x: hw * .76, y: -hh * .05, z: z + 2, w: 44, h: 17.6, sal: -99, b: 1 }); } else obj(ramT, { y: -hh * .43, z: z + 2, w: 62, h: 24.8, sal: -99, b: 1 });
   desde(texto("Con cariño, Nayomi", { t: 7.4, fam: "ita" }), { y: -hh * .26, z, sal: -99 });
-  { const hl = new Date(Date.now() - 5 * 36e5), dias = Math.round((Date.UTC(2026, 10, 7) - Date.UTC(hl.getUTCFullYear(), hl.getUTCMonth(), hl.getUTCDate())) / 864e5);   // días de calendario en hora de Lima desde(texto(dias > 1 ? `FALTAN ${dias} DÍAS` : dias === 1 ? "¡ES MAÑANA!" : dias === 0 ? "¡HOY ES EL GRAN DÍA!" : "¡GRACIAS POR ACOMPAÑARME!", { t: 3.2, peso: 600, esp: .3, col: "#9C7631" }), { y: ancho ? 35 : hh * .56, z, sal: -99 }); }
+  { const hl = new Date(Date.now() - 5 * 36e5), dias = Math.round((Date.UTC(2026, 10, 7) - Date.UTC(hl.getUTCFullYear(), hl.getUTCMonth(), hl.getUTCDate())) / 864e5); /* días de calendario en hora de Lima */ desde(texto(dias > 1 ? `FALTAN ${dias} DÍAS` : dias === 1 ? "¡ES MAÑANA!" : dias === 0 ? "¡HOY ES EL GRAN DÍA!" : "¡GRACIAS POR ACOMPAÑARME!", { t: 3.2, peso: 600, esp: .3, col: "#9C7631" }), { y: ancho ? 35 : hh * .56, z, sal: -99 }); }
   desde({ c: ramoC, w: 48, h: 37.6 }, { x: -hw * .8, y: -hh * .86, z: z + 10, sal: -99 }); desde({ c: ramoC2, w: 48, h: 37.6 }, { x: hw * .8, y: -hh * .86, z: z + 10, sal: -99 });
   mari("rosa", "celeste", { x: -hw * .6, y: hh * .62, z: z + 6, s: .9, r: 20, sal: -99 }); mari("lima", "rosa", { x: hw * .62, y: hh * .7, z: z + 3, s: .75, r: -18, sal: -99 }); vuela("rosa", "perla", z + 8, { sal: -99 }); vuela("lima", "lima", z + 4, { sal: -99 });
   obj(anilloT, { y: ancho ? 21 : hh * .34, z: z + 2, w: ancho ? 60 : 80, h: ancho ? 60 : 80, rx: 68 * RAD, spin: -.16, sal: -99, oro: 1, b: .9 });
@@ -642,11 +648,11 @@ body.abre.bajo #creditos{animation:none;opacity:0;transition:opacity .3s}
     const e = Math.round(viaje / D); if (e !== est) { est = e; puntos.forEach((x, i) => x.classList.toggle("on", i === e)); }
     requestAnimationFrame(cuadro);
   };
-  listoYa = true; const toca = $("toca"); toca.textContent = "Toca para empezar"; toca.classList.add("ok"); portal.classList.add("vivo"); if (pide) abrir();
+  listoYa = true; window.__ok = 1; const toca = $("toca"); toca.textContent = "Toca para empezar"; toca.classList.add("ok"); portal.classList.add("vivo"); if (pide) abrir();
   requestAnimationFrame(cuadro);
   setTimeout(() => arcos(), 600);   // los arcos se preparan cuando ya se ve la invitación
 
-})();
+})().catch((e) => { console.error(e); plan_b(); });
 </script>
 </body>
 </html>
