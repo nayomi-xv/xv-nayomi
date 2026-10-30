@@ -369,6 +369,8 @@ setTimeout(plan_b, 30000);
   const alas = {}; for (const k of ["rosa", "celeste", "lila", "perla", "lima"]) alas[k] = textura(await deSvg("0 -55 75 110", ala(k, false), 9, 13.2));
   const cuerpoT = textura(await deSvg("-4 -20 8 40", '<ellipse cx="0" cy="2" rx="3" ry="16" fill="#3B2A33"/><path d="M-1,-13 C-4,-28 -10,-34 -16,-36 M1,-13 C4,-28 10,-34 16,-36" stroke="#3B2A33" stroke-width="1.3" fill="none"/>', 1.6, 8));
   const hw = HW(), hh = HH();
+  const alaP = textura(await deSvg("0 -30 120 60", '<defs><linearGradient id="apg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#FFFFFF"/><stop offset=".55" stop-color="#F3F1E8"/><stop offset="1" stop-color="#D8CCA6"/></linearGradient></defs><path d="M0,-7 C26,-22 66,-28 118,-16 C104,-10 96,-6 86,-3 C98,0 92,4 80,4 C90,9 78,12 64,10 C70,15 56,16 44,13 C30,14 14,12 0,8 Z" fill="url(#apg)" stroke="#B8923F" stroke-width="2.2"/><path d="M20,-4 C46,-12 78,-15 104,-13 M24,3 C48,-2 70,-4 88,-4" fill="none" stroke="#C9A14F" stroke-width="1.4"/>', 9, 4.4));
+  const cuerpoP = textura(await deSvg("-12 -36 24 72", '<defs><linearGradient id="cpg" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#E9EEE3"/><stop offset=".5" stop-color="#FFFFFF"/><stop offset="1" stop-color="#E9EEE3"/></linearGradient></defs><path d="M0,-30 C6,-30 8,-22 7,-12 C9,0 7,14 3,22 L10,34 L0,29 L-10,34 L-3,22 C-7,14 -9,0 -7,-12 C-8,-22 -6,-30 0,-30 Z" fill="url(#cpg)" stroke="#B8923F" stroke-width="1.6"/><path d="M-2,-31 L0,-36 L2,-31 Z" fill="#C9A14F"/>', 2.6, 7));
   const maris = [];
   const vuela = (L, R2, z1, o = {}) => { const m = mari(L, R2, Object.assign({ z: z1, s: rnd(.55, .8), f: rnd(9, 12), tilt: 40 }, o)); m.x0 = o.x0 ?? rnd(-.4, .4) * hw; m.y0 = o.y0 ?? rnd(-.3, .3) * hh; m.vuela = { v: rnd(.18, .3), ax: hw * rnd(.55, .8), ay: hh * rnd(.25, .45) }; return m; };
   const mari = (L, R, o) => { const m = Object.assign({ x: 0, y: 0, z: 0, s: 1, r: 0, tilt: 50, f: rnd(5, 8), ph: rnd(0, 6), ini: 250, sal: 10 }, o, { L: alas[L], R: alas[R] }); maris.push(m); return m; };
@@ -594,7 +596,11 @@ setTimeout(plan_b, 30000);
   // versión elegante: se quitan los adornos tiernos
   { const fuera2 = new Set([coraT, estrellaT, ...globosT, ...racimoT]);
     for (let i = objs.length - 1; i >= 0; i--) { const o = objs[i]; if (fuera2.has(o.tex) || o.orb || o.cruz || o.sube) objs.splice(i, 1); }
-    maris.length = 0;
+    { const quedan = maris.filter((m, i) => m.vuela && i % 2 === 0); maris.length = 0; quedan.forEach((m, i) => { m.s *= .6; m.L = alas[i % 2 ? "perla" : "rosa"]; m.R = alas[i % 2 ? "perla" : "rosa"]; m.vuela.ax *= .8; maris.push(m); }); }
+    // palomas blancas: cruzan a lo lejos en cada parte; en la portada, una bandada de tres en «V»
+    const paloma = (z1, y1, dir, v, ph, s1) => maris.push({ x: 0, y: y1, z: z1, s: s1, r: dir > 0 ? -90 : 90, tilt: 64, f: rnd(6.5, 8), ph, ini: 260, sal: 6, L: alaP, R: alaP, ww: 9, wh: 4.4, amp: 58, cu: cuerpoP, bw: 2.6, bh: 7, pa: { dir, v, y1, span: hw * 3.2 } });
+    for (let e = 0; e < 8; e++) { const z0 = -e * D; for (let j = 0; j < (lite ? 1 : 2); j++) paloma(z0 - rnd(26, 60), hh * rnd(.42, .78), j % 2 ? -1 : 1, rnd(6, 9), rnd(0, 60), rnd(1.2, 1.5)); }
+    [[0, 0], [-8, -4], [8, -4]].forEach(([dx, dy], k) => maris.push({ x: 0, y: 0, z: -30 - k * 4, s: 1.3, r: -90, tilt: 64, f: 7 + k * .3, ph: k, ini: 260, sal: 6, L: alaP, R: alaP, ww: 9, wh: 4.4, amp: 58, cu: cuerpoP, bw: 2.6, bh: 7, pa: { dir: 1, v: 7, y1: hh * .62 + dy, span: hw * 3.2, dx } }));
     // menos flores sueltas pasando: se queda una de cada dos
     let n2 = 0; for (let i = objs.length - 1; i >= 0; i--) { const o = objs[i]; if (floresT.includes(o.tex) && o.ini === 200 && (n2++ % 2 === 0)) objs.splice(i, 1); } }
 
@@ -668,11 +674,11 @@ setTimeout(plan_b, 30000);
     { const fr = Math.min(1, s1 * 1.6) * (quieto ? 0 : 1), q = Math.round(fr * 100) / 100; if (q !== frV) { frV = q; franjas.style.setProperty("--fr", q); } }
     // un poco más de ángulo al volar (sensación de velocidad)
     if (s1 * s1 !== fovV) { fovV = s1 * s1; const fy = 2 * Math.atan((50 * VH / vmin()) / 100) * (1 + fovV * .14); proj = persp(fy, VW / VH, 1, 1400); }
-    mt(VW1, sZ(q1, -roll + (quieto ? 0 : (1 - ea) * 18 * RAD)), sX(q2, my * 12 * RAD + pitch)); mt(VW2, VW1, sY(q3, mx * 18 * RAD + yaw + (1 - ea) * 14 * RAD + Math.sin(TT * .33) * 2.8 * RAD * resp)); mt(VIEW2, VW2, sT(q4, -camX2, -camY2, -100)); mt(VIEW, VIEW2, sBi(q6, camZ - 100)); mt(PV, proj, VIEW);
+    mt(VW1, sZ(q1, -roll + (quieto ? 0 : (1 - ea) * 18 * RAD)), sX(q2, my * 15 * RAD + pitch)); mt(VW2, VW1, sY(q3, mx * 22 * RAD + yaw + (1 - ea) * 14 * RAD + Math.sin(TT * .33) * 2.8 * RAD * resp)); mt(VIEW2, VW2, sT(q4, -camX2, -camY2, -100)); mt(VIEW, VIEW2, sBi(q6, camZ - 100)); mt(PV, proj, VIEW);
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     nl = 0;
     for (const o of objs) { if (ahorro && o.deco) continue; const d = camZ - o.z; if (d < 1 || d > o.ini) continue; const a = vis(d, o) * o.a; if (a <= .01) continue; let ds = d; if (o.orb) { const b = o.orb, th = b.a + TT * b.v; ds = d - b.R * Math.cos(th); } else if (o.corona) ds = d - o.corona.R * Math.cos(o.corona.i * Math.PI * 2 / 14 + TT * .45); const it = item(); it.ds = ds; it.o = o; it.a = a; it.tipo = 0; it.d = d; nl++; }
-    for (const m of maris) { const d = camZ - m.z; if (d < 1 || d > m.ini) continue; const a = vis(d, m); if (a > .01) { if (m.vuela) { const v = m.vuela, t = TT * v.v + m.ph, px = m.x0 + Math.sin(t) * v.ax, py = m.y0 + Math.sin(t * 1.7) * v.ay; m.r = Math.atan2(Math.cos(t * 1.7) * v.ay * 1.7, Math.cos(t) * v.ax) / RAD - 90; m.r = Math.max(-60, Math.min(60, ((m.r + 540) % 360) - 180)); m.x = px; m.y = py; } const it = item(); it.ds = d; it.o = m; it.a = a; it.tipo = 1; it.d = d; nl++; } }
+    for (const m of maris) { const d = camZ - m.z; if (d < 1 || d > m.ini) continue; const a = vis(d, m); if (a > .01) { if (m.pa) { const q = m.pa, u = ((TT * q.v + m.ph * 7) % q.span + q.span) % q.span - q.span / 2; m.x = q.dir * u + (q.dx || 0); m.y = q.y1 + Math.sin(TT * 1.3 + m.ph) * 1.4; m.r = q.dir > 0 ? -90 + Math.sin(TT * 1.3 + m.ph) * 6 : 90 + Math.sin(TT * 1.3 + m.ph) * 6; } else if (m.vuela) { const v = m.vuela, t = TT * v.v + m.ph, px = m.x0 + Math.sin(t) * v.ax, py = m.y0 + Math.sin(t * 1.7) * v.ay; m.r = Math.atan2(Math.cos(t * 1.7) * v.ay * 1.7, Math.cos(t) * v.ax) / RAD - 90; m.r = Math.max(-60, Math.min(60, ((m.r + 540) % 360) - 180)); m.x = px; m.y = py; } const it = item(); it.ds = d; it.o = m; it.a = a; it.tipo = 1; it.d = d; nl++; } }
     for (const p of petalos) { p.y += p.vy * dt; p.x += p.vx * dt; p.rx += p.sx * dt; p.ry += p.sy * dt; if (p.y < -hh * 1.3) p.y = hh * 1.3; const d = camZ - p.z; if (d > 2 && d < 300) { const it = item(); it.ds = d; it.o = p; it.a = Math.min(1, (300 - d) / 60, (d - 2) / 8) * .85; it.tipo = 2; it.d = d; nl++; } }
     lista.length = nl; for (let i = 0; i < nl; i++) lista[i] = pool[i];
     lista.sort(porDist);
@@ -681,9 +687,9 @@ setTimeout(plan_b, 30000);
         ef(ahorro ? 0 : dof(d), niebla(d), 0, 0);
         const fl = (Math.sin(TT * o.f + o.ph) * .5 + .5) * (o.amp || 70) * RAD + 6 * RAD;
         mt(w1, sB(q1, o.x, o.y + Math.sin(TT * .8 + o.ph) * 1.2, o.z), sZ(q2, o.r * RAD)); mt(w2, w1, sX(q3, -o.tilt * RAD)); mt(BASE, w2, sS(q4, o.s, o.s));
-        mt(w3, BASE, sY(q1, -fl)); mt(w4, w3, sT(q2, 4.5, 0, 0)); mt(w5, w4, sS(q3, 9, 13.2)); mt(FIN, PV, w5); if (fuera(FIN)) continue; dibuja(o.R, FIN, a, K1, 1);
-        mt(w3, BASE, sY(q1, fl)); mt(w4, w3, sT(q2, -4.5, 0, 0)); mt(w5, w4, sS(q3, -9, 13.2)); mt(FIN, PV, w5); dibuja(o.L, FIN, a, K1, 1);
-        mt(w4, BASE, sT(q2, 0, 1, .1)); mt(w5, w4, sS(q3, 1.6, 8)); mt(FIN, PV, w5); dibuja(cuerpoT, FIN, a, K1, 1); continue; }
+        const WW = o.ww || 9, WH = o.wh || 13.2; mt(w3, BASE, sY(q1, -fl)); mt(w4, w3, sT(q2, WW / 2, 0, 0)); mt(w5, w4, sS(q3, WW, WH)); mt(FIN, PV, w5); if (fuera(FIN)) continue; dibuja(o.R, FIN, a, K1, 1);
+        mt(w3, BASE, sY(q1, fl)); mt(w4, w3, sT(q2, -WW / 2, 0, 0)); mt(w5, w4, sS(q3, -WW, WH)); mt(FIN, PV, w5); dibuja(o.L, FIN, a, K1, 1);
+        mt(w4, BASE, sT(q2, 0, o.cu ? 0 : 1, .1)); mt(w5, w4, sS(q3, o.bw || 1.6, o.bh || 8)); mt(FIN, PV, w5); dibuja(o.cu || cuerpoT, FIN, a, K1, 1); continue; }
       if (tipo === 2) { ef(ahorro ? 0 : dof(d), niebla(d), 0, 0); mt(w1, sB(q1, o.x, o.y, o.z), sX(q2, o.rx)); mt(w2, w1, sY(q3, o.ry)); mt(w3, w2, sS(q4, o.s, o.s)); mt(FIN, PV, w3); if (fuera(FIN)) continue; dibuja(o.t, FIN, a, K1, .8); continue; }
       if (o.orb) { const b = o.orb, th = b.a + TT * b.v, cz = Math.cos(th); mt(w1, sB(q1, b.cx + b.R * Math.sin(th), b.cy - cz * b.R * b.inc, o.z + b.R * cz), sZ(q2, o.rz + TT * (o.spin || 0))); mt(w4, w1, sS(q5, o.w, o.h)); }
       else if (o.corona) { const c = o.corona, th = c.i * Math.PI * 2 / 14 + TT * .45; mt(w1, sB(q1, 0, c.y, o.z), sX(q2, 14 * RAD)); mt(w2, w1, sY(q3, th)); mt(w3, w2, sT(q4, 0, 0, c.R)); mt(w4, w3, sS(q5, o.w, o.h)); }
@@ -693,8 +699,8 @@ setTimeout(plan_b, 30000);
         if (o.meceY) ry += Math.sin(TT * .6) * o.meceY * RAD;
         if (o.spin) rz += TT * o.spin; if (o.spinY) ry = TT * o.spinY;
         if (o.rayo !== undefined) rz += Math.sin(TT * .22 + o.rayo) * .06;
-        let y = o.y + (o.mece ? Math.sin(TT * 1.1) * .6 : 0); let xx = o.x; if (o.flota !== undefined) { y += Math.sin(TT * .5 + o.flota) * 1.2; xx += Math.cos(TT * .37 + o.flota) * 1.2; } if (o.sube) { const L = o.sube; y += ((TT * 4 * (o.vsube || 1) + o.ph) % L) - L / 2; rz += Math.sin(TT * (o.vsube ? .8 : 1.4) + o.ph) * (o.vsube ? .12 : .25); }
-        mt(w1, sB(q1, xx, y, o.z), sY(q2, ry)); mt(w2, w1, sX(q3, rx)); mt(w3, w2, sZ(q4, rz)); mt(w4, w3, sS(q5, o.w, o.h)); }
+        let y = o.y + (o.mece ? Math.sin(TT * 1.1) * .6 : 0); const zf = o.gira && !quieto ? Math.sin(TT * .55 + o.x * .07) * 2.2 : 0; let xx = o.x; if (o.flota !== undefined) { y += Math.sin(TT * .5 + o.flota) * 1.2; xx += Math.cos(TT * .37 + o.flota) * 1.2; } if (o.sube) { const L = o.sube; y += ((TT * 4 * (o.vsube || 1) + o.ph) % L) - L / 2; rz += Math.sin(TT * (o.vsube ? .8 : 1.4) + o.ph) * (o.vsube ? .12 : .25); }
+        mt(w1, sB(q1, xx, y, o.z + zf), sY(q2, ry)); mt(w2, w1, sX(q3, rx)); mt(w3, w2, sZ(q4, rz)); mt(w4, w3, sS(q5, o.w, o.h)); }
       mt(FIN, PV, w4); if (fuera(FIN)) continue;
       ef(o.sinDof || ahorro ? 0 : dof(d), niebla(d), o.oro && !ahorro ? .5 : 0, ((TT * .32 + o.x * .011 + o.z * .0013) % 2.8) - .7);
       let aa = a; if (o.tw) aa *= .45 + .55 * Math.sin(TT * o.tw * 3 + o.x);
