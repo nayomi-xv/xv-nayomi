@@ -486,7 +486,7 @@ setTimeout(plan_b, 30000);
     const c = await deSvg(`-10 -10 ${W + 20} ${H + 20}`, `<path d="${A(b)}" fill="rgba(255,255,252,.5)"/><path d="${A(0)} ${A(b)}" fill-rule="evenodd" fill="url(#oro)" stroke="#A9853C" stroke-width="1"/><path d="${A(b + 14)}" fill="none" stroke="#C9A14F" stroke-opacity=".6" stroke-width="1.2"/>` + p, arcoW + 2, arcoH + 2);
     const tb = textura(banda); for (const [dz, e2] of [[22, 1.02], [44, 1.04], [66, 1.06], [100, 1.08], [136, 1.1], [174, 1.12], [214, 1.14], [256, 1.16]]) obj(tb, { z: z - 8 + dz, w: (arcoW + 2) * e2, h: (arcoH + 2) * e2, sal: dz > 80 ? 30 : 4, ini: 250, oro: 1 });
     // pasillo de arcos en cada tramo del camino, centrados donde pasa la cámara
-    for (let k = 0; k < 8; k++) for (const g of (k === 7 ? [24, 70] : lite ? [30, 90] : [14, 50, 86, 120])) { const za = -k * D - g, fa = (100 - za) / D - k, s1 = Math.sin(Math.PI * Math.min(1, fa)) ** 2, sg = k % 2 ? -1 : 1;
+    for (let k = 0; k < 8; k++) for (const g of (k === 7 ? [24, 60, 96, 132] : lite ? [12, 62, 112, 160] : [10, 35, 60, 85, 110, 135, 160])) { const za = -k * D - g, fa = (100 - za) / D - k, s1 = Math.sin(Math.PI * Math.min(1, fa)) ** 2, sg = k % 2 ? -1 : 1;
       if (k === 0 && g < 40) continue;
       obj(tb, { x: sg * hw * .2 * s1, y: hh * .05 * s1, z: za, w: arcoW + 2, h: arcoH + 2, sal: 4, ini: 230, oro: 1, b: .95 }); }
     for (let i = (lite ? 2 : 4); i >= 1; i--) obj(tb, { z: z - 8 - i * .9, w: arcoW + 2, h: arcoH + 2, k: [.9 - i * .03, .82 - i * .03, .62 - i * .03], sal: 16 });
