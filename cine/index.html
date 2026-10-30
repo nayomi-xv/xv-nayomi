@@ -416,8 +416,8 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   // 4 · con la bendición de Dios: papá y padrino
   z = -4 * D; guir(z);
   desde(texto("Con la bendición de Dios", { t: ancho ? 6.4 : 6.8, fam: "ita" }), { y: ancho ? 35 : hh * .66, z, sal: 26, gira: 1 });
-  desde(texto("Y EL AMOR DE", { t: 3, peso: 600, esp: .26, col: "#B5577A" }), { y: ancho ? 27 : hh * .55, z, sal: 26 });
-  [["MI PAPÁ", "Luis Ananias Cholan Calua"], ["MI MAMÁ", "que me cuida desde el cielo"]].forEach(([a1, b1], i) => {
+  desde(texto("Y EL AMOR DE MIS PADRES", { t: 3, peso: 600, esp: .26, col: "#B5577A" }), { y: ancho ? 27 : hh * .55, z, sal: 26 });
+  [["MI PAPÁ", "Luis Ananias Cholan Calua"], ["MI MAMÁ", "Dios la tiene en sus brazos y me cuida desde el cielo"]].forEach(([a1, b1], i) => {
     const filas = [{ t: a1, tam: 2.8, peso: 600, esp: .24, col: "#9C7631", una: 1, gap: 2.4 }, { t: b1, tam: ancho ? 6.4 : 7, fam: "serif", lh: 1.12 }];
     grueso(tarjeta(ancho ? 48 : 76, filas, 16), ancho ? { x: (i ? 1 : -1) * 27, y: -2, z: z - i * 6, ry: (i ? -1 : 1) * 14 * RAD, sal: 22, gira: 1, balancea: 1 } : { y: (i ? -1 : 1) * hh * .2 + (i ? -hh * .06 : 0), z: z - i * 8, ry: (i % 2 ? -1 : 1) * 9 * RAD, sal: 22, gira: 1, balancea: 1 }, lite ? 2 : 4, .7); });
   desde({ c: ramoC, w: 40, h: 31.3 }, { x: -hw * .84, y: -hh * .88, z: z + 10, sal: 12 }); desde({ c: ramoC2, w: 40, h: 31.3 }, { x: hw * .84, y: -hh * .88, z: z + 10, sal: 12 });
