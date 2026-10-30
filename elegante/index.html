@@ -181,6 +181,7 @@ body.abre.bajo #creditos{animation:none;opacity:0;transition:opacity .3s}
   <p>«Serás corona de gloria en la mano de Jehová, y diadema de reino en la mano del Dios tuyo.» Isaías 62:3</p>
   <p>Sábado 7 de noviembre de 2026, 8:00 p. m. Jr. San Juan Bautista 363, 2.ª etapa San Juan Bautista, Comas. Ref.: Incas Universitaria.</p>
   <p>Mi papá: Luis Ananias Cholan Calua. Mi mamá, que me cuida desde el cielo.</p>
+  <p>Versión 31 de octubre: automática.</p>
 </main>
 <div id="largo"></div>
 <div id="desliza" aria-hidden="true">Desliza hacia arriba<b></b></div>
@@ -718,8 +719,8 @@ setTimeout(plan_b, 30000);
   const frena = (e) => { if (H.classList.contains("cerrado")) e.preventDefault(); };
   addEventListener("touchmove", frena, { passive: false }); addEventListener("wheel", frena, { passive: false });
   const abrir = () => { if (abierto) return; if (!listoYa) { pide = true; return; } abierto = true; scrollTo(0, 0); tAb = performance.now(); portal.classList.add("abre"); document.body.classList.add("abre");
-    setTimeout(() => { scrollTo(0, 0); H.classList.remove("cerrado"); }, quieto ? 0 : 1900); setTimeout(() => { portal.style.display = "none"; }, quieto ? 0 : 1600); if (!quieto) setTimeout(() => window.__auto && window.__auto(), 4300);
-    if (quieto && matchMedia("(pointer: coarse)").matches) setTimeout(() => { if (scrollY < 30 && performance.now() - tAb > 4500) { $("mano").classList.add("on"); document.body.classList.add("mano"); } }, quieto ? 600 : 5200); };
+    setTimeout(() => { scrollTo(0, 0); H.classList.remove("cerrado"); }, quieto ? 0 : 1900); setTimeout(() => { portal.style.display = "none"; }, quieto ? 0 : 1600); setTimeout(() => window.__auto && window.__auto(), quieto ? 1200 : 4300);
+    if (false) setTimeout(() => { if (scrollY < 30 && performance.now() - tAb > 4500) { $("mano").classList.add("on"); document.body.classList.add("mano"); } }, quieto ? 600 : 5200); };
   addEventListener("scroll", () => { if (H.classList.contains("cerrado")) { if (scrollY) scrollTo(0, 0); return; } if (scrollY > 60) document.body.classList.add("bajo"); }, { passive: true });
   ["pointerdown", "keydown"].forEach((ev) => addEventListener(ev, abrir, { passive: true }));
   // matrices reutilizables: no se crea nada nuevo en cada cuadro (sin pausas del recolector de basura)
