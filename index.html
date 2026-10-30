@@ -64,6 +64,8 @@ body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif
 #portal.abre .mp{transform:translate(var(--tx),var(--ty)) rotate(var(--r2)) scale(1.5);opacity:0}
 #portal.abre .mp svg{animation-duration:.13s}
 #desliza{opacity:0}
+html.cerrado,html.cerrado body{overflow:hidden;overscroll-behavior:none}
+#portal{touch-action:none}
 @media (min-aspect-ratio:23/20){#portal .ani{--aw:min(74vmin,620px);top:53%}#portal .sel,#portal .mp{top:53%}#portal .sel{width:30vmin}#portal .tit{top:3.5vh}#desliza{left:auto;right:28px}}
 body.abre #desliza{opacity:1;transition:opacity .6s ease-out 1.4s}
 body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
@@ -449,10 +451,14 @@ body.abre.bajo #desliza{opacity:0;transition:opacity .4s}
   const vis = (d, o) => { if (d < 1) return 0; const fin = o.sal < 0 ? 0 : o.sal; const ain = Math.min(1, (o.ini - d) / 80), aout = fin ? Math.min(1, (d - fin * .55) / (fin * .45)) : 1; return Math.max(0, Math.min(ain, aout)); };
   const portal = $("portal");
   let last = performance.now(), TT = 0, est = -1, abierto = false, listoYa = false, pide = false, tAb = 0;
-  const abrir = () => { if (abierto) return; if (!listoYa) { pide = true; return; } abierto = true; tAb = performance.now(); portal.classList.add("abre"); document.body.classList.add("abre");
-    setTimeout(() => { portal.style.display = "none"; }, quieto ? 0 : 1900); };
-  addEventListener("scroll", () => { if (scrollY > 2) abrir(); if (scrollY > 60) document.body.classList.add("bajo"); }, { passive: true });
-  ["pointerdown", "wheel", "keydown", "touchmove"].forEach((ev) => addEventListener(ev, abrir, { passive: true }));
+  if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+  const H = document.documentElement; H.classList.add("cerrado"); scrollTo(0, 0);
+  const frena = (e) => { if (H.classList.contains("cerrado")) e.preventDefault(); };
+  addEventListener("touchmove", frena, { passive: false }); addEventListener("wheel", frena, { passive: false });
+  const abrir = () => { if (abierto) return; if (!listoYa) { pide = true; return; } abierto = true; scrollTo(0, 0); tAb = performance.now(); portal.classList.add("abre"); document.body.classList.add("abre");
+    setTimeout(() => { portal.style.display = "none"; scrollTo(0, 0); H.classList.remove("cerrado"); }, quieto ? 0 : 1900); };
+  addEventListener("scroll", () => { if (H.classList.contains("cerrado")) { if (scrollY) scrollTo(0, 0); return; } if (scrollY > 60) document.body.classList.add("bajo"); }, { passive: true });
+  ["pointerdown", "keydown"].forEach((ev) => addEventListener(ev, abrir, { passive: true }));
   // matrices reutilizables: no se crea nada nuevo en cada cuadro (sin pausas del recolector de basura)
   const mt = (o, a, b) => { for (let i = 0; i < 4; i++) { const b0 = b[i * 4], b1 = b[i * 4 + 1], b2 = b[i * 4 + 2], b3 = b[i * 4 + 3]; for (let j = 0; j < 4; j++) o[i * 4 + j] = a[j] * b0 + a[4 + j] * b1 + a[8 + j] * b2 + a[12 + j] * b3; } return o; };
   const id = (m) => { m.fill(0); m[0] = m[5] = m[10] = m[15] = 1; return m; };
