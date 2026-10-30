@@ -111,6 +111,7 @@ body.mano.bajo #desliza{opacity:0!important}
 @keyframes destello{0%,100%{background-position:100% 0}50%{background-position:0 0}}
 #portal .mono span{position:relative;font:400 min(11vmin,64px)/1 "Great Vibes",cursive;color:#34502A;margin-top:-1.2vmin}
 #portal .mono small{position:relative;font:600 min(2.6vmin,12px)/1 "Cinzel",serif;letter-spacing:.42em;text-indent:.42em;color:#9C7631;margin-top:2.4vmin;text-transform:uppercase}
+#portal .fecha .cuenta{display:block;margin-top:1.6vmin;font:600 min(2.9vmin,13px)/1 "Cinzel",serif;letter-spacing:.24em;color:#9E7B43}
 #portal .fecha{position:absolute;left:0;right:0;bottom:calc(19vh + env(safe-area-inset-bottom,0px));margin:0;text-align:center;font:400 min(5.4vmin,26px)/1.2 "Cormorant Italic",serif;color:#34502A;transition:opacity .5s}
 #portal .toca{bottom:calc(10vh + env(safe-area-inset-bottom,0px))!important}
 #portal.abre .mono{transform:translate(-50%,-50%) scale(1.3);opacity:0}
@@ -163,7 +164,7 @@ body.abre.bajo #creditos{animation:none;opacity:0;transition:opacity .3s}
 <circle r="186" fill="none" stroke="url(#mgO)" stroke-width="2.4"/><circle r="176" fill="none" stroke="#C9A14F" stroke-opacity=".55" stroke-width="1"/><circle r="194" fill="none" stroke="#C9A14F" stroke-opacity=".35" stroke-width=".8" stroke-dasharray="1 7"/>
 <g fill="url(#mgO)" stroke="#7A5A22" stroke-width=".6"><path d="M0,-197 L7,-186 L0,-175 L-7,-186 Z"/><path d="M0,175 L7,186 L0,197 L-7,186 Z"/><path d="M-197,0 L-186,-6 L-175,0 L-186,6 Z"/><path d="M175,0 L186,-6 L197,0 L186,6 Z"/></g>
 <g fill="#FFFDF6" stroke="#C9A14F" stroke-width=".6"><circle cx="131.5" cy="-131.5" r="3"/><circle cx="-131.5" cy="131.5" r="3"/><circle cx="131.5" cy="131.5" r="3"/><circle cx="-131.5" cy="-131.5" r="3"/></g></svg><b>XV</b><span>Nayomi</span><small>Cholan Ramos</small></div>
-<p class="fecha">Sábado 7 de noviembre de 2026</p>
+<p class="fecha">Sábado 7 de noviembre de 2026<span class="cuenta" id="cuenta"></span></p>
 <p class="toca" id="toca">Preparando la función…</p></div>
 <main style="position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)">
   <h1>XV años de Nayomi Cholan Ramos</h1>
@@ -181,6 +182,7 @@ body.abre.bajo #creditos{animation:none;opacity:0;transition:opacity .3s}
 <div id="sin"><div><p>Tu navegador no puede mostrar el viaje 3D.</p><a href="sobre/">Ver mi invitación</a></div></div>
 
 <script>
+{ const M = new Date("2026-11-07T20:00:00-05:00").getTime(), c = () => { const e = document.getElementById("cuenta"); if (!e) return; const ms = M - Date.now(); if (ms <= 0) { e.textContent = ""; return; } const d = Math.floor(ms / 864e5), h = Math.floor(ms / 36e5) % 24, m = Math.floor(ms / 6e4) % 60, s2 = Math.floor(ms / 1e3) % 60; e.textContent = `Faltan ${d} días · ${h} h · ${String(m).padStart(2, "0")} min · ${String(s2).padStart(2, "0")} s`; }; c(); setInterval(c, 1000); }
 const RESP = location.pathname.includes("/ultra") ? "../cine/" : "cine/";
 const plan_b = () => { if (window.__ok) return; location.replace(RESP); };
 setTimeout(() => { if (!window.__ok) { const t = document.getElementById("toca"); if (t) { t.innerHTML = '<a href="' + RESP + '" style="color:inherit">Toca aquí si no carga</a>'; t.style.pointerEvents = "auto"; } } }, 15000);
@@ -414,6 +416,53 @@ setTimeout(plan_b, 30000);
   const adorna = (x, y, z1, w, h, f = 0) => { const a = [[-w / 2, h / 2, 1], [w / 2, -h / 2, -1]];
     for (const [dx, dy, sg] of a) { obj(floresT[(f + (sg > 0 ? 0 : 2)) % 5], { x: x + dx * .92, y: y + dy * .9, z: z1 + 4, w: w * .16, h: w * .16, rz: f + sg, spin: .06 * sg, sal: 18 }); obj(floresT[(f + 1) % 5], { x: x + dx * .74, y: y + dy * .98, z: z1 + 3.4, w: w * .1, h: w * .1, rz: f * 2, sal: 18 }); obj(hojaT, { x: x + dx * 1.02, y: y + dy * .72, z: z1 + 3, w: w * .2, h: w * .11, rz: (sg > 0 ? 200 : -20) * RAD, sal: 18 }); } };
 
+  // ===== PUERTA DOBLE 3D (marfil y menta, molduras de oro, monograma XV al centro) =====
+  const PW = ancho ? 62 : 78, PH = ancho ? 92 : 148, YC = ancho ? hh * .84 : hh * .74, ZP = 304, PY = -YC + PH / 2;
+  const puertaC = (() => { const [c, x] = lienzo(PW, PH, .9), Rr = PW / 2;
+    const arco = (i) => { x.beginPath(); x.moveTo(i, Rr); x.arc(PW / 2, Rr, Rr - i, Math.PI, 0); x.lineTo(PW - i, PH - i); x.lineTo(i, PH - i); x.closePath(); };
+    const q = x._s, oroG = () => { const g = x.createLinearGradient(0, 0, PW * q, PH * q); [["#9E7B43", 0], ["#CDB178", .3], ["#E8D6A8", .45], ["#B8975C", .62], ["#DCC48F", .8], ["#9E7B43", 1]].forEach(([cc, oo]) => g.addColorStop(oo, cc)); return g; };
+    arco(0); const fg = x.createLinearGradient(0, 0, 0, PH * q); fg.addColorStop(0, "#FDFCF6"); fg.addColorStop(.55, "#F1F6EA"); fg.addColorStop(1, "#DDEBD1"); x.save(); x.scale(1 / q, 1 / q); x.restore(); x.fillStyle = fg; x.fill();
+    x.lineWidth = 1.6; x.strokeStyle = oroG(); arco(.8); x.stroke(); x.lineWidth = .35; arco(3.2); x.stroke();
+    // molduras de cada hoja
+    const panel = (a, b, w, h, top) => { x.beginPath(); if (top) { x.moveTo(a, b + w / 2); x.arc(a + w / 2, b + w / 2, w / 2, Math.PI, 0); } else x.moveTo(a, b); x.lineTo(a + w, top ? b + w / 2 : b); x.lineTo(a + w, b + h); x.lineTo(a, b + h); x.closePath(); x.lineWidth = .55; x.strokeStyle = oroG(); x.stroke(); };
+    const m = PW * .1, lw = PW / 2 - m * 1.4;
+    for (const lx of [m, PW / 2 + m * .4]) { panel(lx, PH * .3, lw, PH * .33, false); panel(lx + 1.2, PH * .3 + 1.2, lw - 2.4, PH * .33 - 2.4, false); panel(lx, PH * .69, lw, PH * .24, false); }
+    x.beginPath(); x.moveTo(PW / 2, Rr * .2); x.lineTo(PW / 2, PH - 3.2); x.lineWidth = .5; x.strokeStyle = oroG(); x.stroke();
+    // monograma XV en un medallón
+    const my = PH * .17; x.beginPath(); x.arc(PW / 2, my, PW * .14, 0, 6.29); x.fillStyle = "rgba(255,255,250,.9)"; x.fill(); x.lineWidth = .6; x.strokeStyle = oroG(); x.stroke(); x.beginPath(); x.arc(PW / 2, my, PW * .125, 0, 6.29); x.lineWidth = .2; x.stroke();
+    x.textAlign = "center"; x.textBaseline = "middle"; fnt(x, 600, PW * .1, '"Cinzel"'); x.fillStyle = oroG(); ft(x, "XV", PW / 2, my + .3);
+    // manijas
+    for (const hx of [PW / 2 - 2.4, PW / 2 + 2.4]) { x.beginPath(); x.arc(hx, PH * .64, 1.3, 0, 6.29); x.fillStyle = oroG(); x.fill(); x.beginPath(); x.ellipse(hx, PH * .64 + 3.6, .55, 2.6, 0, 0, 6.29); x.fill(); }
+    return c; })();
+  const mitad = (c, der) => { const k = document.createElement("canvas"); k.width = Math.ceil(c.width / 2); k.height = c.height; k.getContext("2d").drawImage(c, der ? -Math.floor(c.width / 2) : 0, 0); return k; };
+  const hojaI = mitad(puertaC, false), hojaD = mitad(puertaC, true), tI = textura(hojaI), tD = textura(hojaD), tIo = textura(siluetaOro(hojaI)), tDo = textura(siluetaOro(hojaD));
+  for (const [t, to, sg] of [[tI, tIo, 1], [tD, tDo, -1]]) { for (let i = 3; i >= 1; i--) obj(to, { puerta: { sg, hx: -sg * PW / 2, dz: i * .7 }, y: PY, z: ZP, w: PW / 2, h: PH, ini: 400, sal: 3, b: 1, sinDof: 1 }); obj(t, { puerta: { sg, hx: -sg * PW / 2, dz: 0 }, y: PY, z: ZP, w: PW / 2, h: PH, ini: 400, sal: 3, b: .9, sinDof: 1 }); }
+  // marco de la puerta: arco dorado grueso, guirnalda de flores arriba y macetas de flores a los lados
+  const luzT = textura(await deSvg("-50 -50 100 100", '<defs><radialGradient id="lz"><stop offset="0" stop-color="#FFFDF0" stop-opacity="1"/><stop offset=".45" stop-color="#FFF4D6" stop-opacity=".75"/><stop offset="1" stop-color="#FFF4D6" stop-opacity="0"/></radialGradient></defs><circle r="50" fill="url(#lz)"/>', 20, 20));
+  adorna(0, PY, ZP + 1, PW * 1.02, PH * 1.0, 1); for (let i = 0; i < 9; i++) { const t2 = Math.PI * (i + .5) / 9, rr3 = PW / 2 + 1.2; obj(i % 3 === 1 ? hojaT : floresT[[0, 1, 2, 0, 2][i % 5]], { x: -Math.cos(t2) * rr3, y: PY + PH / 2 - PW / 2 + Math.sin(t2) * rr3, z: ZP + 1.5, w: i % 3 === 1 ? 7 : (i % 2 ? 5 : 6.5), h: i % 3 === 1 ? 4 : 0, rz: t2 + i, ini: 400, sal: 3 }); }
+  obj(luzT, { y: PY + PH * .05, z: ZP - 6, w: PW * 1.7, h: PH * 1.3, ini: 400, sal: 3, b: 1, sinDof: 1, luzPuerta: 1 });
+
+  // ===== ALFOMBRA marfil con bandas menta, filetes de oro y pétalos =====
+  const alfT = textura(await deSvg("0 0 200 100", '<defs><linearGradient id="af" x1="0" x2="1"><stop offset="0" stop-color="#C9B07A"/><stop offset=".03" stop-color="#E7D6A9"/><stop offset=".05" stop-color="#D9EAD0"/><stop offset=".16" stop-color="#D9EAD0"/><stop offset=".18" stop-color="#C9A86A"/><stop offset=".19" stop-color="#FBF8EF"/><stop offset=".81" stop-color="#FBF8EF"/><stop offset=".82" stop-color="#C9A86A"/><stop offset=".84" stop-color="#D9EAD0"/><stop offset=".95" stop-color="#D9EAD0"/><stop offset=".97" stop-color="#E7D6A9"/><stop offset="1" stop-color="#C9B07A"/></linearGradient></defs><rect width="200" height="100" fill="url(#af)"/>' + [25, 75].map((yy) => `<path d="M100,${yy - 9} L106,${yy} L100,${yy + 9} L94,${yy} Z" fill="none" stroke="#D9C08A" stroke-width="1.2"/><circle cx="100" cy="${yy}" r="1.8" fill="#E6B8C8"/>`).join("") + '<path d="M44,0 V100 M156,0 V100" stroke="#C9A86A" stroke-opacity=".5" stroke-width=".8" stroke-dasharray="3 5"/>', 22, 11));
+  const AW = ancho ? hw * .62 : hw * .88, AL = 20;
+  for (let zz = ZP + 10; zz > -7 * D - 90; zz -= AL - .4) { obj(alfT, { y: -YC, z: zz, w: AW, h: AL, rx: -90 * RAD - Math.atan(.16), ini: 300, sal: 1, b: 1, alf: 1 });
+    for (let j = 0; j < (lite ? 1 : 2); j++) obj(petaloT[j % 3], { x: rnd(-.45, .45) * AW, y: -YC + .06, z: zz + rnd(-9, 9), w: rnd(2, 3.2), h: 0, rx: -90 * RAD, rz: rnd(0, 6.3), ini: 260, sal: 2, b: 1, deco: 1, alf: 1 }); }
+
+  // ===== CRONÓMETRO (se dibuja de nuevo cada segundo) =====
+  const META = new Date("2026-11-07T20:00:00-05:00").getTime();
+  const crCan = document.createElement("canvas"); crCan.width = 1024; crCan.height = 256; const crX = crCan.getContext("2d");
+  const crTex = gl.createTexture();
+  const crono = () => { const ms = META - Date.now(), hl = new Date(Date.now() - 5 * 36e5), dCal = Math.round((Date.UTC(2026, 10, 7) - Date.UTC(hl.getUTCFullYear(), hl.getUTCMonth(), hl.getUTCDate())) / 864e5);
+    const x = crX; x.clearRect(0, 0, 1024, 256); x.textAlign = "center"; x.textBaseline = "middle";
+    if (ms <= 0 || dCal <= 0) { x.font = '600 70px "Cinzel"'; x.fillStyle = "#9E7B43"; x.fillText(dCal < 0 ? "¡GRACIAS POR ACOMPAÑARME!" : "¡HOY ES EL GRAN DÍA!", 512, 128); }
+    else { const v = [Math.floor(ms / 864e5), Math.floor(ms / 36e5) % 24, Math.floor(ms / 6e4) % 60, Math.floor(ms / 1e3) % 60], et = ["DÍAS", "HORAS", "MIN", "SEG"];
+      for (let i = 0; i < 4; i++) { const cx = 128 + i * 256; x.save(); x.shadowColor = "rgba(60,100,50,.18)"; x.shadowBlur = 14; x.shadowOffsetY = 5; rr(x, cx - 104, 16, 208, 224, 26); x.fillStyle = "rgba(255,255,252,.96)"; x.fill(); x.restore();
+        rr(x, cx - 104, 16, 208, 224, 26); x.lineWidth = 3; x.strokeStyle = "#C9A86A"; x.stroke(); rr(x, cx - 94, 26, 188, 204, 20); x.lineWidth = 1.2; x.strokeStyle = "rgba(201,168,106,.6)"; x.stroke();
+        x.font = '400 112px "Cormorant"'; x.fillStyle = "#2E4A2C"; x.fillText(String(v[i]).padStart(2, "0"), cx, 112); x.font = '600 30px "Cinzel"'; x.fillStyle = "#9E7B43"; x.fillText(et[i], cx, 200); } }
+    gl.bindTexture(gl.TEXTURE_2D, crTex); gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true); gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, crCan); gl.generateMipmap(gl.TEXTURE_2D);
+    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR_MIPMAP_LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE); gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE); };
+  crono();
+
   // 0 · portada
   let z = 0;
   const arcoW = ancho ? 86 : 88, arcoH = ancho ? 98 : Math.min(168, hh * 1.56);
@@ -566,7 +615,7 @@ setTimeout(plan_b, 30000);
   desde(texto("Jr. San Juan Bautista 363, Comas", { t: ancho ? 4 : 4.4, fam: "ita", col: "#B5577A" }), { y: -hh * .04, z, sal: -99 });
   if (ancho) { obj(ramT, { x: -hw * .76, y: -hh * .05, z: z + 2, w: 44, h: 17.6, sal: -99, b: 1 }); obj(ramT, { x: hw * .76, y: -hh * .05, z: z + 2, w: 44, h: 17.6, sal: -99, b: 1 }); } else obj(ramT, { y: -hh * .43, z: z + 2, w: 62, h: 24.8, sal: -99, b: 1 });
   desde(texto("Con cariño, Nayomi", { t: 7.4, fam: "ita" }), { y: -hh * .26, z, sal: -99 });
-  { const hl = new Date(Date.now() - 5 * 36e5), dias = Math.round((Date.UTC(2026, 10, 7) - Date.UTC(hl.getUTCFullYear(), hl.getUTCMonth(), hl.getUTCDate())) / 864e5); /* días de calendario en hora de Lima */ desde(texto(dias > 1 ? `FALTAN ${dias} DÍAS` : dias === 1 ? "¡ES MAÑANA!" : dias === 0 ? "¡HOY ES EL GRAN DÍA!" : "¡GRACIAS POR ACOMPAÑARME!", { t: 3.2, peso: 600, esp: .3, col: "#9C7631" }), { y: ancho ? 35 : hh * .56, z, sal: -99 }); }
+  const crObj = obj(crTex, { y: ancho ? 37 : hh * .6, z: z + 2, w: ancho ? 52 : 74, h: (ancho ? 52 : 74) / 4, sal: -99, b: 1 }); window.__crZ = z;
   desde({ c: ramoC, w: 48, h: 37.6 }, { x: -hw * .8, y: -hh * .86, z: z + 10, sal: -99 }); desde({ c: ramoC2, w: 48, h: 37.6 }, { x: hw * .8, y: -hh * .86, z: z + 10, sal: -99 });
   mari("rosa", "celeste", { x: -hw * .6, y: hh * .62, z: z + 6, s: .9, r: 20, sal: -99 }); mari("lima", "rosa", { x: hw * .62, y: hh * .7, z: z + 3, s: .75, r: -18, sal: -99 }); vuela("rosa", "perla", z + 8, { sal: -99 }); vuela("lima", "lima", z + 4, { sal: -99 });
   if (0) obj(anilloT, { y: ancho ? 21 : hh * .34, z: z + 2, w: ancho ? 60 : 80, h: ancho ? 60 : 80, rx: 68 * RAD, spin: -.16, sal: -99, oro: 1, b: .9 });
@@ -653,8 +702,8 @@ setTimeout(plan_b, 30000);
   const frena = (e) => { if (H.classList.contains("cerrado")) e.preventDefault(); };
   addEventListener("touchmove", frena, { passive: false }); addEventListener("wheel", frena, { passive: false });
   const abrir = () => { if (abierto) return; if (!listoYa) { pide = true; return; } abierto = true; scrollTo(0, 0); tAb = performance.now(); portal.classList.add("abre"); document.body.classList.add("abre");
-    setTimeout(() => { scrollTo(0, 0); H.classList.remove("cerrado"); }, quieto ? 0 : 850); setTimeout(() => { portal.style.display = "none"; }, quieto ? 0 : 1600);
-    if (matchMedia("(pointer: coarse)").matches) setTimeout(() => { if (scrollY < 30) { $("mano").classList.add("on"); document.body.classList.add("mano"); } }, quieto ? 600 : 3200); };
+    setTimeout(() => { scrollTo(0, 0); H.classList.remove("cerrado"); }, quieto ? 0 : 1900); setTimeout(() => { portal.style.display = "none"; }, quieto ? 0 : 1600);
+    if (matchMedia("(pointer: coarse)").matches) setTimeout(() => { if (scrollY < 30 && performance.now() - tAb > 4500) { $("mano").classList.add("on"); document.body.classList.add("mano"); } }, quieto ? 600 : 5200); };
   addEventListener("scroll", () => { if (H.classList.contains("cerrado")) { if (scrollY) scrollTo(0, 0); return; } if (scrollY > 60) document.body.classList.add("bajo"); }, { passive: true });
   ["pointerdown", "keydown"].forEach((ev) => addEventListener(ev, abrir, { passive: true }));
   // matrices reutilizables: no se crea nada nuevo en cada cuadro (sin pausas del recolector de basura)
@@ -681,7 +730,7 @@ setTimeout(plan_b, 30000);
   // foco de la cámara: siempre en la parte que estás viendo (lo muy cerca y lo lejano se ve borroso, como en el cine)
   let foco = 100; const dof = (d) => Math.min(1.3, Math.max(0, (Math.abs(d - foco) - 24) / 50)); const niebla = (d) => Math.min(.5, Math.max(0, (d - 150) / 200));
   // resolución que se adapta: si el celular no llega a ~40 cuadros por segundo, baja un poco la nitidez
-  let fq = 0, fn = 0, bajadas = 0, desde0 = 0, nCu = 0, ahorro = lite, frV = -1, fovV = -1; const franjas = document.createElement("i");
+  let abreP = 0, crUlt = 0, fq = 0, fn = 0, bajadas = 0, desde0 = 0, nCu = 0, ahorro = lite, frV = -1, fovV = -1; const franjas = document.createElement("i");
   const cuadro = (now) => {
     if (!abierto && nCu > 2) { last = now; requestAnimationFrame(cuadro); return; } nCu++;
     const raw = (now - last) / 1000, dt = Math.min(.05, raw); last = now; TT += dt;
@@ -694,7 +743,8 @@ setTimeout(plan_b, 30000);
     // cámara: entre escena y escena vuela en curva hacia un lado, sube, gira hacia donde va y se ladea
     const sv = viaje / D, kk = Math.floor(sv), f = sv - kk, sg = kk % 2 ? -1 : 1, s1 = Math.sin(Math.PI * f), s2 = Math.sin(2 * Math.PI * f);
     const camX = sg * AX * s1 * s1, camY = AY * s1 * s1, yaw = Math.atan(sg * AX * Math.PI * s2 / D) * .85, pitch = -Math.atan(AY * Math.PI * s2 / D) * .6;
-    const ka = abierto ? Math.min(1, (now - tAb) / 2700) : 0, ea = ka < .5 ? 4 * ka * ka * ka : 1 - Math.pow(-2 * ka + 2, 3) / 2, dolly = quieto ? 0 : (1 - ea) * 300;
+    const tA = abierto ? now - tAb : 0, kp = quieto ? (abierto ? 1 : 0) : Math.max(0, Math.min(1, (tA - 700) / 1300)); abreP = kp < .5 ? 2 * kp * kp : 1 - Math.pow(-2 * kp + 2, 2) / 2;
+    const ka = abierto ? Math.max(0, Math.min(1, (tA - 1150) / 2700)) : 0, ea = ka < .5 ? 4 * ka * ka * ka : 1 - Math.pow(-2 * ka + 2, 3) / 2, dolly = quieto ? 0 : (1 - ea) * 300;
     const resp = quieto ? 0 : 1; const camX2 = camX + Math.sin(TT * .33) * 4 * resp, camY2 = camY + Math.sin(TT * .27 + 1) * 1.8 * resp;
     const camZ = 100 - viaje + dolly, roll = Math.max(-1, Math.min(1, vel / 900)) * 2.6 * RAD - yaw * .8;
     const vt = Math.max(-1, Math.min(1, vel / 700));
@@ -703,7 +753,8 @@ setTimeout(plan_b, 30000);
     { const fr = Math.min(1, s1 * 1.6) * (quieto ? 0 : 1), q = Math.round(fr * 100) / 100; if (q !== frV) { frV = q; franjas.style.setProperty("--fr", q); } }
     // un poco más de ángulo al volar (sensación de velocidad)
     if (s1 * s1 !== fovV) { fovV = s1 * s1; const fy = 2 * Math.atan((50 * VH / vmin()) / 100) * (1 + fovV * .14); proj = persp(fy, VW / VH, 1, 1400); }
-    mt(VW1, sZ(q1, -roll + (quieto ? 0 : (1 - ea) * 18 * RAD)), sX(q2, my * 15 * RAD + pitch)); mt(VW2, VW1, sY(q3, mx * 22 * RAD + yaw + (1 - ea) * 14 * RAD + Math.sin(TT * .33) * 2.8 * RAD * resp)); mt(VIEW2, VW2, sT(q4, -camX2, -camY2, -100)); mt(VIEW, VIEW2, sBi(q6, camZ - 100)); mt(PV, proj, VIEW);
+    mt(VW1, sZ(q1, -roll + (quieto ? 0 : Math.sin(Math.PI * ea) * 9 * RAD)), sX(q2, my * 15 * RAD + pitch)); mt(VW2, VW1, sY(q3, mx * 22 * RAD + yaw + (quieto ? 0 : Math.sin(Math.PI * ea) * 7 * RAD) + Math.sin(TT * .33) * 2.8 * RAD * resp)); mt(VIEW2, VW2, sT(q4, -camX2, -camY2, -100)); mt(VIEW, VIEW2, sBi(q6, camZ - 100)); mt(PV, proj, VIEW);
+    if (now - crUlt > 1000 && camZ - window.__crZ < 330) { crUlt = now; crono(); }
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     nl = 0;
     for (const o of objs) { if (ahorro && o.deco) continue; const d = camZ - o.z; if (d < 1 || d > o.ini) continue; const a = vis(d, o) * o.a; if (a <= .01) continue; let ds = d; if (o.orb) { const b = o.orb, th = b.a + TT * b.v; ds = d - b.R * Math.cos(th); } else if (o.corona) ds = d - o.corona.R * Math.cos(o.corona.i * Math.PI * 2 / 14 + TT * .45); const it = item(); it.ds = ds; it.o = o; it.a = a; it.tipo = 0; it.d = d; nl++; }
@@ -722,6 +773,7 @@ setTimeout(plan_b, 30000);
       if (tipo === 2) { ef(ahorro ? 0 : dof(d), niebla(d), 0, 0); mt(w1, sB(q1, o.x, o.y, o.z), sX(q2, o.rx)); mt(w2, w1, sY(q3, o.ry)); mt(w3, w2, sS(q4, o.s, o.s)); mt(FIN, PV, w3); if (fuera(FIN)) continue; dibuja(o.t, FIN, a, K1, .8); continue; }
       if (o.orb) { const b = o.orb, th = b.a + TT * b.v, cz = Math.cos(th); mt(w1, sB(q1, b.cx + b.R * Math.sin(th), b.cy - cz * b.R * b.inc, o.z + b.R * cz), sZ(q2, o.rz + TT * (o.spin || 0))); mt(w4, w1, sS(q5, o.w, o.h)); }
       else if (o.corona) { const c = o.corona, th = c.i * Math.PI * 2 / 14 + TT * .45; mt(w1, sB(q1, 0, c.y, o.z), sX(q2, 14 * RAD)); mt(w2, w1, sY(q3, th)); mt(w3, w2, sT(q4, 0, 0, c.R)); mt(w4, w3, sS(q5, o.w, o.h)); }
+      else if (o.puerta) { const P0 = o.puerta, ang = abreP * 104 * RAD * P0.sg, l = o.k === o._k0 ? 1 : 1; mt(w1, sB(q1, P0.hx, o.y, o.z), sY(q2, ang)); mt(w2, w1, sT(q3, P0.sg * o.w / 2, 0, -P0.dz)); mt(w4, w2, sS(q5, o.w, o.h)); const sh = .86 + .14 * Math.cos(ang * 1.1); o._luz = P0.dz ? [sh * .95, sh * .86, sh * .62] : [sh, sh, sh * .98]; }
       else { let ry = o.ry, rx = o.rx, rz = o.rz;
         if (o.gira) { ry += Math.max(0, Math.min(1, (d - 100) / 160)) * 62 * RAD * (o.x > 0 ? -1 : 1); rx += vt * 9 * RAD; }   // llegan girando y se inclinan con la velocidad
         if (o.balancea) ry += Math.sin(TT * .7) * 7 * RAD;
@@ -732,7 +784,8 @@ setTimeout(plan_b, 30000);
         mt(w1, sB(q1, xx, y, o.z + zf), sY(q2, ry)); mt(w2, w1, sX(q3, rx)); mt(w3, w2, sZ(q4, rz)); mt(w4, w3, sS(q5, o.w, o.h)); }
       mt(FIN, PV, w4); if (fuera(FIN)) continue;
       ef(o.sinDof || ahorro ? 0 : dof(d), niebla(d), o.oro && !ahorro ? .28 : 0, ((TT * .32 + o.x * .011 + o.z * .0013) % 2.8) - .7);
-      let aa = a; if (o.tw) aa *= .45 + .55 * Math.sin(TT * o.tw * 3 + o.x);
+      let aa = a; if (o.tw) aa *= .45 + .55 * Math.sin(TT * o.tw * 3 + o.x); if (o.luzPuerta) aa = Math.min(1, abreP * 1.6) * (1 - Math.max(0, abreP - .8) * 2.5) * .95;
+      if (o._luz) { dibuja(o.tex, FIN, aa, o._luz, 1); continue; }
       if (o.f3d) { const L = o.w * .52, PW = o.w * .46, cup = o.f3d.cup + Math.sin(TT * .9 + o.x) * .06;
         for (let pi = 0; pi < 5; pi++) { mt(w4, w3, sZ(q1, pi * 1.2566)); mt(w5, w4, sX(q2, -cup)); mt(w6, w5, sT(q3, 0, L * .5, 0)); mt(w1, w6, sS(q4, PW, L)); mt(FIN, PV, w1); dibuja(o.f3d.p, FIN, aa, o.k, .85); }
         mt(w4, w3, sT(q1, 0, 0, o.w * .08)); mt(w5, w4, sS(q2, o.w * .26, o.w * .26)); mt(FIN, PV, w5); dibuja(perlaT, FIN, aa, [1, .86, .55], 1); }
