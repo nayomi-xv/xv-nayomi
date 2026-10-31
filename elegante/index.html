@@ -458,7 +458,7 @@ setTimeout(plan_b, 30000);
   // ===== ALFOMBRA marfil con bandas menta, filetes de oro y pétalos =====
   const alfT = textura(await deSvg("0 0 200 100", '<defs><linearGradient id="af" x1="0" x2="1"><stop offset="0" stop-color="#C9B07A"/><stop offset=".03" stop-color="#E7D6A9"/><stop offset=".05" stop-color="#D9EAD0"/><stop offset=".16" stop-color="#D9EAD0"/><stop offset=".18" stop-color="#C9A86A"/><stop offset=".19" stop-color="#FBF8EF"/><stop offset=".81" stop-color="#FBF8EF"/><stop offset=".82" stop-color="#C9A86A"/><stop offset=".84" stop-color="#D9EAD0"/><stop offset=".95" stop-color="#D9EAD0"/><stop offset=".97" stop-color="#E7D6A9"/><stop offset="1" stop-color="#C9B07A"/></linearGradient></defs><rect width="200" height="100" fill="url(#af)"/>' + [25, 75].map((yy) => `<path d="M100,${yy - 9} L106,${yy} L100,${yy + 9} L94,${yy} Z" fill="none" stroke="#D9C08A" stroke-width="1.2"/><circle cx="100" cy="${yy}" r="1.8" fill="#E6B8C8"/>`).join("") + '<path d="M44,0 V100 M156,0 V100" stroke="#C9A86A" stroke-opacity=".5" stroke-width=".8" stroke-dasharray="3 5"/>', 22, 11));
   const AW = ancho ? hw * .62 : hw * .88, AL = 20;
-  for (let zz = ZP + 10; zz > -7 * D - 90; zz -= AL - .4) { obj(alfT, { y: -YC, z: zz, w: AW, h: AL, rx: -90 * RAD - Math.atan(.16), ini: 300, sal: 1, b: 1, alf: 1 });
+  for (let zz = ZP + 10; zz > -7 * D - 90; zz -= AL - .4) { obj(alfT, { y: -YC, z: zz, w: AW, h: AL, rx: -90 * RAD - Math.atan(.1), ini: 300, sal: 1, b: 1, alf: 1 });
     for (let j = 0; j < (lite ? 1 : 2); j++) obj(petaloT[j % 3], { deco: j ? 1 : 0, x: rnd(-.45, .45) * AW, y: -YC + .06, z: zz + rnd(-9, 9), w: rnd(2, 3.2), h: 0, rx: -90 * RAD, rz: rnd(0, 6.3), ini: 260, sal: 2, b: 1, deco: 1, alf: 1 }); }
 
   // ===== CRONÓMETRO (se dibuja de nuevo cada segundo) =====
@@ -489,7 +489,7 @@ setTimeout(plan_b, 30000);
     // pasillo de arcos en cada tramo del camino, centrados donde pasa la cámara
     for (let k = 0; k < 8; k++) for (const g of (k === 7 ? [24, 60, 96, 132] : lite ? [12, 62, 112, 160] : [10, 35, 60, 85, 110, 135, 160])) { const za = -k * D - g, fa = (100 - za) / D - k, s1 = Math.sin(Math.PI * Math.min(1, fa)) ** 2, sg = k % 2 ? -1 : 1;
       if (k === 0 && g < 40) continue;
-      obj(tb, { x: sg * hw * .2 * s1, y: hh * .05 * s1, z: za, w: arcoW + 2, h: arcoH + 2, sal: 4, ini: 230, oro: 1, b: .95 }); }
+      obj(tb, { x: 0 * sg * s1, y: hh * .05 * s1, z: za, w: arcoW + 2, h: arcoH + 2, sal: 4, ini: 230, oro: 1, b: .95 }); }
     for (let i = (lite ? 2 : 4); i >= 1; i--) obj(tb, { z: z - 8 - i * .9, w: arcoW + 2, h: arcoH + 2, k: [.9 - i * .03, .82 - i * .03, .62 - i * .03], sal: 16 });
     obj(textura(c), { z: z - 8, w: arcoW + 2, h: arcoH + 2, sal: 16 }); }
   desde(texto("TE INVITO A CELEBRAR MIS", { t: ancho ? 2.8 : 3.3, peso: 600, esp: .26, col: "#B5577A" }), { y: ancho ? 30.5 : hh * .45, z, sal: 30 });
@@ -637,7 +637,7 @@ setTimeout(plan_b, 30000);
   desde(texto("Jr. San Juan Bautista 363, Comas", { t: ancho ? 4 : 4.4, fam: "ita", col: "#B5577A" }), { y: -hh * .04, z, sal: -99 });
   if (ancho) { obj(ramT, { x: -hw * .76, y: -hh * .05, z: z + 2, w: 44, h: 17.6, sal: -99, b: 1 }); obj(ramT, { x: hw * .76, y: -hh * .05, z: z + 2, w: 44, h: 17.6, sal: -99, b: 1 }); } else obj(ramT, { y: -hh * .43, z: z + 2, w: 62, h: 24.8, sal: -99, b: 1 });
   desde(texto("Con cariño, Nayomi", { t: 7.4, fam: "ita" }), { y: -hh * .26, z, sal: -99 });
-  const crObj = obj(crTex, { y: ancho ? 37 : hh * .6, z: z + 2, w: ancho ? 52 : 74, h: (ancho ? 52 : 74) / 4, sal: -99, b: 1 }); window.__crZ = z;
+  const crObj = obj(crTex, { y: ancho ? 37 : hh * .6, z: z + 2, w: ancho ? 52 : 66, h: (ancho ? 52 : 66) / 4, sal: -99, b: 1 }); window.__crZ = z;
   desde({ c: ramoC, w: 48, h: 37.6 }, { x: -hw * .8, y: -hh * .86, z: z + 10, sal: -99 }); desde({ c: ramoC2, w: 48, h: 37.6 }, { x: hw * .8, y: -hh * .86, z: z + 10, sal: -99 });
   mari("rosa", "celeste", { x: -hw * .6, y: hh * .62, z: z + 6, s: .9, r: 20, sal: -99 }); mari("lima", "rosa", { x: hw * .62, y: hh * .7, z: z + 3, s: .75, r: -18, sal: -99 }); vuela("rosa", "perla", z + 8, { sal: -99 }); vuela("lima", "lima", z + 4, { sal: -99 });
   if (0) obj(anilloT, { y: ancho ? 21 : hh * .34, z: z + 2, w: ancho ? 60 : 80, h: ancho ? 60 : 80, rx: 68 * RAD, spin: -.16, sal: -99, oro: 1, b: .9 });
@@ -654,7 +654,7 @@ setTimeout(plan_b, 30000);
     for (let j = 0; j < (lite ? 3 : 7); j++) obj(brilloT, { x: (Math.random() < .5 ? -1 : 1) * rnd(.56, 1.05) * hw, y: rnd(-.8, .8) * hh, z: z0 + rnd(-6, 16), w: rnd(2.2, 4), h: 0, ini: 200, sal: 8, tw: rnd(1.2, 2.6), deco: 1 }); }
 
   // arcos de flores (un solo dibujo, se usa 6 veces)
-  const AX = hw * .2, AY = hh * .05;            // la cámara se va de lado y sube un poco a mitad de camino
+  const AX = 0, AY = hh * .05;            // la cámara se va de lado y sube un poco a mitad de camino
   // fondo lejano: flores y hojas grandes, suaves (se mueven lento = profundidad)
   for (let e = 0; e < 8; e++) { const z0 = -e * D; for (let j = 0; j < (lite ? 3 : 6); j++) { const lado = j % 2 ? 1 : -1, dd = rnd(70, 120), k = (100 + dd) / 100, t = j % 4 === 3 ? hojaT : floresT[(j + e) % 5], w = rnd(11, 17) * k;
       obj(t, { x: lado * hw * rnd(.35, .95) * k, y: rnd(-.9, .9) * hh * k, z: z0 - dd, w, h: t === hojaT ? w * .55 : w, rz: rnd(0, 6.28), b: 1, ini: 260, sal: 10, deco: 1, spin: rnd(-.06, .06) }); }
@@ -737,11 +737,11 @@ setTimeout(plan_b, 30000);
   const sY = (m, r) => { id(m); const c = Math.cos(r), n = Math.sin(r); m[0] = c; m[2] = -n; m[8] = n; m[10] = c; return m; };
   const sZ = (m, r) => { id(m); const c = Math.cos(r), n = Math.sin(r); m[0] = c; m[1] = n; m[4] = -n; m[5] = c; return m; };
   const F = () => new Float32Array(16);
-  const RB = ancho ? 430 : 360, BAJA = .16;
+  const RB = ancho ? 1000 : 820, BAJA = .1;
   // pone un punto del camino recto (x, y, z) sobre la espiral, mirando a lo largo de la curva
   const sB = (m, x, y, z) => { const L = -z, f = L / RB, c = Math.cos(f), n = Math.sin(f); id(m); m[0] = c; m[2] = n; m[8] = -n; m[10] = c; m[12] = RB * (1 - c) + c * x; m[13] = -L * BAJA + y; m[14] = -RB * n + n * x; return m; };
   const sBi = (m, z) => { const L = -z, f = L / RB, c = Math.cos(f), n = Math.sin(f), px = RB * (1 - c), py = -L * BAJA, pz = -RB * n; id(m); m[0] = c; m[2] = -n; m[8] = n; m[10] = c; m[12] = -(c * px + n * pz); m[13] = -py; m[14] = -(-n * px + c * pz); return m; };
-  const VIEW2 = F(), q6 = F(), q1 = F(), q2 = F(), q3 = F(), q4 = F(), q5 = F(), w1 = F(), w2 = F(), w3 = F(), w4 = F(), w5 = F(), w6 = F(), FIN = F(), PV = F(), VW1 = F(), VW2 = F(), VW3 = F(), VIEW = F(), BASE = F();
+  const VIEW2 = F(), OR1 = F(), OR2 = F(), q7 = F(), q8 = F(), q6 = F(), q1 = F(), q2 = F(), q3 = F(), q4 = F(), q5 = F(), w1 = F(), w2 = F(), w3 = F(), w4 = F(), w5 = F(), w6 = F(), FIN = F(), PV = F(), VW1 = F(), VW2 = F(), VW3 = F(), VIEW = F(), BASE = F();
   const K1 = [1, 1, 1];
   const dibuja = (tex, mm, a, k, b) => { gl.bindTexture(gl.TEXTURE_2D, tex); gl.uniformMatrix4fv(uM, false, mm); gl.uniform1f(uA, a); gl.uniform3f(uK, k[0], k[1], k[2]); gl.uniform1f(uB, b); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4); };
   // ¿se ve? (las 4 esquinas fuera del mismo lado de la pantalla = no se dibuja)
@@ -768,7 +768,7 @@ setTimeout(plan_b, 30000);
     const camX = sg * AX * s1 * s1, camY = AY * s1 * s1, yaw = Math.atan(sg * AX * Math.PI * s2 / D) * .85, pitch = -Math.atan(AY * Math.PI * s2 / D) * .6;
     const tA = abierto ? now - tAb : 0, kp = quieto ? (abierto ? 1 : 0) : Math.max(0, Math.min(1, (tA - 700) / 1300)); abreP = kp < .5 ? 2 * kp * kp : 1 - Math.pow(-2 * kp + 2, 2) / 2;
     const ka = abierto ? Math.max(0, Math.min(1, (tA - 1150) / 2700)) : 0, ea = ka < .5 ? 4 * ka * ka * ka : 1 - Math.pow(-2 * ka + 2, 3) / 2, dolly = quieto ? 0 : (1 - ea) * 300;
-    const resp = quieto ? 0 : 1; const camX2 = camX + Math.sin(TT * .33) * 4 * resp, camY2 = camY + Math.sin(TT * .27 + 1) * 1.8 * resp;
+    const resp = quieto ? 0 : 1; const camX2 = camX, camY2 = camY;
     const camZ = 100 - viaje + dolly, roll = Math.max(-1, Math.min(1, vel / 900)) * 2.6 * RAD - yaw * .8;
     const vt = Math.max(-1, Math.min(1, vel / 700));
     { const iF = Math.round(sv + .28), fz = camZ + iF * D; foco += (Math.max(40, fz) - foco) * Math.min(1, dt * 6); }
@@ -776,7 +776,7 @@ setTimeout(plan_b, 30000);
     { const fr = Math.min(1, s1 * 1.6) * (quieto ? 0 : 1), q = Math.round(fr * 100) / 100; if (q !== frV) { frV = q; franjas.style.setProperty("--fr", q); } }
     // un poco más de ángulo al volar (sensación de velocidad)
     if (s1 * s1 !== fovV) { fovV = s1 * s1; const fy = 2 * Math.atan((50 * VH / vmin()) / 100) * (1 + fovV * .14); proj = persp(fy, VW / VH, 1, 1400); }
-    mt(VW1, sZ(q1, -roll + (quieto ? 0 : Math.sin(Math.PI * ea) * 9 * RAD)), sX(q2, my * 15 * RAD + pitch)); mt(VW2, VW1, sY(q3, mx * 22 * RAD + yaw + (quieto ? 0 : Math.sin(Math.PI * ea) * 7 * RAD) + Math.sin(TT * .33) * 2.8 * RAD * resp)); mt(VIEW2, VW2, sT(q4, -camX2, -camY2, -100)); mt(VIEW, VIEW2, sBi(q6, camZ - 100)); mt(PV, proj, VIEW);
+    mt(VW1, sZ(q1, -roll + (quieto ? 0 : Math.sin(Math.PI * ea) * 9 * RAD)), sX(q2, pitch)); mt(VW2, VW1, sY(q3, yaw + (quieto ? 0 : Math.sin(Math.PI * ea) * 7 * RAD))); mt(VIEW2, VW2, sT(q4, -camX2, -camY2, -100)); mt(OR1, VIEW2, sY(q7, (mx * 26 + Math.sin(TT * .3) * 6 * resp) * RAD)); mt(OR2, OR1, sX(q8, (my * 12 + Math.sin(TT * .22 + 1) * 2.5 * resp) * RAD)); mt(VIEW, OR2, sBi(q6, camZ - 100)); mt(PV, proj, VIEW);
     if (now - crUlt > 1000 && camZ - window.__crZ < 330) { crUlt = now; crono(); }
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     nl = 0;
