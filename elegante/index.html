@@ -79,14 +79,15 @@ body{margin:0;color:var(--perla);font:400 16px/1.5 "Outfit",system-ui,sans-serif
 #portal.abre .mp{transform:translate(var(--tx),var(--ty)) rotate(var(--r2)) scale(1.5);opacity:0}
 #portal.abre .mp svg{animation-duration:.13s}
 #desliza{opacity:0}
-#play{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:7;width:46px;height:46px;border-radius:50%;border:1px solid #C9A86A;background:rgba(255,255,250,.9);color:#9E7B43;display:grid;place-items:center;padding:0;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .5s,transform .15s;box-shadow:0 4px 14px rgba(60,90,40,.18);-webkit-tap-highlight-color:transparent}
+#play{position:fixed;right:max(14px,env(safe-area-inset-right));bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:7;width:38px;height:38px;border-radius:50%;border:1px solid rgba(201,168,106,.85);background:rgba(255,255,250,.5);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#9E7B43;display:grid;place-items:center;padding:0;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .5s,transform .15s;-webkit-tap-highlight-color:transparent}
 body.auto #play{opacity:1;pointer-events:auto}
 #play:active{transform:scale(.94)}
-#play svg{width:18px;height:18px}
+#play svg{width:13px;height:13px}
 #play .i-play,#play .i-otra{display:none}
 #play[data-m=pausa] .i-pausa,#play[data-m=fin] .i-pausa{display:none}
 #play[data-m=pausa] .i-play,#play[data-m=fin] .i-otra{display:block}
-#estado{position:fixed;left:50%;bottom:calc(44px + env(safe-area-inset-bottom,0px));z-index:6;transform:translate(-50%,8px);padding:9px 18px;border-radius:999px;background:rgba(255,255,250,.92);border:1px solid rgba(201,168,106,.6);font:400 16px/1 "Cormorant Italic",serif;color:#2E4A2C;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .4s,transform .4s;box-shadow:0 4px 14px rgba(60,90,40,.12)}
+#estado{position:fixed;left:50%;bottom:calc(40px + env(safe-area-inset-bottom,0px));z-index:6;display:flex;align-items:center;gap:10px;transform:translate(-50%,6px);font:600 10.5px/1 "Cinzel",serif;letter-spacing:.32em;text-indent:.32em;text-transform:uppercase;color:#9E7B43;white-space:nowrap;opacity:0;pointer-events:none;transition:opacity .5s,transform .5s;text-shadow:0 0 10px rgba(255,255,250,.95),0 0 3px rgba(255,255,250,.9)}
+#estado::before,#estado::after{content:"";width:22px;height:1px;background:linear-gradient(90deg,transparent,#C9A86A)}#estado::after{transform:scaleX(-1)}
 #estado.on{opacity:1;transform:translate(-50%,0)}
 body.auto #desliza,body.auto #mano{display:none!important}
 #mano{position:fixed;left:50%;bottom:calc(30px + env(safe-area-inset-bottom,0px));z-index:6;width:min(13vmin,54px);margin-left:calc(min(13vmin,54px) / -2);pointer-events:none;opacity:0;transform:translateY(10px);transition:opacity .5s ease-out,transform .5s ease-out;filter:drop-shadow(0 4px 8px rgba(60,90,40,.25))}
@@ -409,7 +410,7 @@ setTimeout(plan_b, 30000);
 
   // jardín que pasa volando
   const jardin = (z0, n) => { n = lite ? Math.round(n * .5) : n; for (let j = 0; j < n; j++) {
-    let x, y; do { x = rnd(-1.15, 1.15) * hw; y = rnd(-1.1, 1.1) * hh; } while (Math.abs(x) < hw * .55 && Math.abs(y) < hh * .5);
+    let x, y; do { x = rnd(-1.15, 1.15) * hw; y = rnd(-1.1, 1.1) * hh; } while (Math.abs(x) < hw * .62);
     const z = z0 - 40 - j * ((D - 70) / n), q = j % 6;
     if (q === 0) obj(hojaT, { x, y, z, w: rnd(16, 24), h: rnd(9, 12), rz: rnd(0, 360) * RAD, ry: rnd(-40, 40) * RAD, ini: 200, sal: 4, spin: rnd(-.4, .4) });
     else if (q === 5) obj(perlaT, { x, y, z, w: rnd(2.2, 3.4), h: 0, ini: 200, sal: 4 });
@@ -483,7 +484,7 @@ setTimeout(plan_b, 30000);
     const n1 = Math.round(Math.PI * rr2 / 16); for (let i = 0; i <= n1; i++) { const t = Math.PI + Math.PI * i / n1; perla(r + rr2 * Math.cos(t), r + rr2 * Math.sin(t)); }
     const n2 = Math.round((H - r - m) / 16); for (let i = 1; i <= n2; i++) { const y = r + (H - r - m) * i / n2; perla(m, y); perla(W - m, y); }
     const banda = await deSvg(`-10 -10 ${W + 20} ${H + 20}`, `<path d="${A(0)} ${A(b)}" fill-rule="evenodd" fill="url(#oro)"/>`, arcoW + 2, arcoH + 2);
-    const c = await deSvg(`-10 -10 ${W + 20} ${H + 20}`, `<path d="${A(b)}" fill="rgba(255,255,252,.5)"/><path d="${A(0)} ${A(b)}" fill-rule="evenodd" fill="url(#oro)" stroke="#A9853C" stroke-width="1"/><path d="${A(b + 14)}" fill="none" stroke="#C9A14F" stroke-opacity=".6" stroke-width="1.2"/>` + p, arcoW + 2, arcoH + 2);
+    const c = await deSvg(`-10 -10 ${W + 20} ${H + 20}`, `<path d="${A(b)}" fill="rgba(253,254,249,.86)"/><path d="${A(0)} ${A(b)}" fill-rule="evenodd" fill="url(#oro)" stroke="#A9853C" stroke-width="1"/><path d="${A(b + 14)}" fill="none" stroke="#C9A14F" stroke-opacity=".6" stroke-width="1.2"/>` + p, arcoW + 2, arcoH + 2);
     const tb = textura(banda); for (const [dz, e2] of [[22, 1.02], [44, 1.04], [66, 1.06], [100, 1.08], [136, 1.1], [174, 1.12], [214, 1.14], [256, 1.16]]) obj(tb, { z: z - 8 + dz, w: (arcoW + 2) * e2, h: (arcoH + 2) * e2, sal: dz > 80 ? 30 : 4, ini: 250, oro: 1 });
     // pasillo de arcos en cada tramo del camino, centrados donde pasa la cámara
     for (let k = 0; k < 8; k++) for (const g of (k === 7 ? [24, 60, 96, 132] : lite ? [12, 62, 112, 160] : [10, 35, 60, 85, 110, 135, 160])) { const za = -k * D - g, fa = (100 - za) / D - k, s1 = Math.sin(Math.PI * Math.min(1, fa)) ** 2, sg = k % 2 ? -1 : 1;
@@ -650,7 +651,7 @@ setTimeout(plan_b, 30000);
     obj(hojaT, { x: lado * vx * 1.05, y: vy * .66, z: zz + 2, w: 10, h: 5.5, rz: (lado > 0 ? -25 : 205) * RAD, sal: 3, ini: 230 });
     // corazones que suben y brillos alrededor
     for (let j = 0; j < (lite ? 3 : 6); j++) obj(coraT, { x: (j % 2 ? 1 : -1) * hw * rnd(.45, .85), y: 0, z: z0 + rnd(-10, 14), w: rnd(3.4, 5.4), h: 0, sube: hh * 2.2, ph: rnd(0, hh * 2.2), ini: 200, sal: 8 });
-    for (let j = 0; j < (lite ? 3 : 7); j++) obj(brilloT, { x: rnd(-.85, .85) * hw, y: rnd(-.8, .8) * hh, z: z0 + rnd(-6, 16), w: rnd(2.2, 4), h: 0, ini: 200, sal: 8, tw: rnd(1.2, 2.6), deco: 1 }); }
+    for (let j = 0; j < (lite ? 3 : 7); j++) obj(brilloT, { x: (Math.random() < .5 ? -1 : 1) * rnd(.56, 1.05) * hw, y: rnd(-.8, .8) * hh, z: z0 + rnd(-6, 16), w: rnd(2.2, 4), h: 0, ini: 200, sal: 8, tw: rnd(1.2, 2.6), deco: 1 }); }
 
   // arcos de flores (un solo dibujo, se usa 6 veces)
   const AX = hw * .2, AY = hh * .05;            // la cámara se va de lado y sube un poco a mitad de camino
@@ -665,7 +666,7 @@ setTimeout(plan_b, 30000);
     for (let j = 0; j < 0; j++) obj(rayoT, { x: (j - 1) * hw * .55 + rnd(-6, 6), y: hh * 1.05, z: z0 - 46 - j * 6, w: rnd(26, 38), h: hh * 2.6, rz: (j - 1) * -16 * RAD + rnd(-.08, .08), a: rnd(.22, .34), b: 1, ini: 240, sal: 6, rayo: rnd(0, 6), deco: 1, sinDof: 1 });
     for (let j = 0; j < (lite ? 4 : 10); j++) { const dd = rnd(22, 64), k = dd / 100; if (0) obj(bokehT[j % 4], { x: rnd(-.95, .95) * hw * k, y: rnd(-.9, .9) * hh * k, z: z0 + 100 - dd, w: rnd(3, 7.5) * k * 3, h: 0, a: rnd(.35, .7), b: 1, ini: 200, sal: 2, flota: rnd(0, 6), deco: 1, sinDof: 1 }); } }
 
-  for (let e = 0; e < 8; e++) for (let j = 0; j < (lite ? 2 : 6); j++) obj(perlaT, { x: rnd(-.9, .9) * hw, y: rnd(-.85, .85) * hh, z: -e * D + rnd(-10, 18), w: rnd(1.6, 2.8), h: 0, ini: 210, sal: 8, flota: rnd(0, 6), deco: 1 });
+  for (let e = 0; e < 8; e++) for (let j = 0; j < (lite ? 2 : 6); j++) obj(perlaT, { x: (Math.random() < .5 ? -1 : 1) * rnd(.56, 1.05) * hw, y: rnd(-.85, .85) * hh, z: -e * D + rnd(-10, 18), w: rnd(1.6, 2.8), h: 0, ini: 210, sal: 8, flota: rnd(0, 6), deco: 1 });
 
   // en cada parte: flores y corazones 3D que giran
   for (let e = 0; e < 8; e++) { const z0 = -e * D; for (let j = 0; j < (lite ? 2 : 4); j++) { const t = j % 2 ? coraT : floresT[(j + e * 3) % 5], w = t === coraT ? rnd(5, 7) : rnd(6, 8.5);
@@ -685,16 +686,16 @@ setTimeout(plan_b, 30000);
   objs.forEach((o) => { if (!o.h) o.h = o.w; });
 
   // pétalos que caen dando vueltas en 3D por todo el viaje
-  const petalos = []; for (let i = 0; i < (lite ? 24 : 72); i++) petalos.push({ t: i % 5 === 2 ? floresT[i % 5] : petaloT[i % 4], x: rnd(-1, 1) * hw, y: rnd(-1, 1) * hh, z: rnd(-7 * D - 120, 60), vx: rnd(-1, 1), vy: rnd(-5, -2.5), rx: rnd(0, 6), ry: rnd(0, 6), sx: rnd(1, 2.6), sy: rnd(.8, 2), s: rnd(2.2, 3.6) });
+  const petalos = []; for (let i = 0; i < (lite ? 24 : 72); i++) petalos.push({ t: i % 5 === 2 ? floresT[i % 5] : petaloT[i % 4], x: (Math.random() < .5 ? -1 : 1) * rnd(.56, 1.05) * hw, y: rnd(-1, 1) * hh, z: rnd(-7 * D - 120, 60), vx: rnd(-1, 1), vy: rnd(-5, -2.5), rx: rnd(0, 6), ry: rnd(0, 6), sx: rnd(1, 2.6), sy: rnd(.8, 2), s: rnd(2.2, 3.6) });
 
   // versión elegante: se quitan los adornos tiernos
   { const fuera2 = new Set([coraT, estrellaT, ...globosT, ...racimoT]);
     for (let i = objs.length - 1; i >= 0; i--) { const o = objs[i]; if (fuera2.has(o.tex) || o.orb || o.cruz || o.sube) objs.splice(i, 1); }
-    { const quedan = maris.filter((m) => m.vuela || m.posada); maris.length = 0; quedan.forEach((m, i) => { if (!m.posada) m.s *= .62; const c1 = ["rosa", "perla", "lima", "perla"][i % 4]; m.L = alas[c1]; m.R = alas[c1]; if (m.vuela) m.vuela.ax *= .8; maris.push(m); }); }
+    { const quedan = maris.filter((m) => m.vuela || m.posada); maris.length = 0; quedan.forEach((m, i) => { if (!m.posada) m.s *= .62; const c1 = ["rosa", "perla", "lima", "perla"][i % 4]; m.L = alas[c1]; m.R = alas[c1]; if (m.vuela) { m.vuela.ax *= .8; m.y0 = (i % 2 ? 1 : -1) * hh * rnd(.66, .82); m.vuela.ay = hh * .07; } maris.push(m); }); }
     // palomas blancas: cruzan a lo lejos en cada parte; en la portada, una bandada de tres en «V»
     const paloma = (z1, y1, dir, v, ph, s1) => maris.push({ x: 0, y: y1, z: z1, s: s1, r: dir > 0 ? -90 : 90, tilt: 64, f: rnd(6.5, 8), ph, ini: 260, sal: 6, L: alaP, R: alaP, ww: 9, wh: 4.4, amp: 58, cu: cuerpoP, bw: 2.6, bh: 7, pa: { dir, v, y1, span: hw * 3.2 } });
-    for (let e = 0; e < 8; e++) { const z0 = -e * D; for (let j = 0; j < (lite ? 1 : 2); j++) paloma(z0 - rnd(26, 60), hh * rnd(.42, .78), j % 2 ? -1 : 1, rnd(6, 9), rnd(0, 60), rnd(1.2, 1.5)); }
-    [[0, 0], [-8, -4], [8, -4]].forEach(([dx, dy], k) => maris.push({ x: 0, y: 0, z: -30 - k * 4, s: 1.3, r: -90, tilt: 64, f: 7 + k * .3, ph: k, ini: 260, sal: 6, L: alaP, R: alaP, ww: 9, wh: 4.4, amp: 58, cu: cuerpoP, bw: 2.6, bh: 7, pa: { dir: 1, v: 7, y1: hh * .62 + dy, span: hw * 3.2, dx } }));
+    for (let e = 0; e < 8; e++) { const z0 = -e * D; for (let j = 0; j < (lite ? 1 : 2); j++) paloma(z0 - rnd(40, 70), hh * rnd(1.02, 1.18), j % 2 ? -1 : 1, rnd(6, 9), rnd(0, 60), rnd(1.2, 1.5)); }
+    [[0, 0], [-8, -4], [8, -4]].forEach(([dx, dy], k) => maris.push({ x: 0, y: 0, z: -30 - k * 4, s: 1.3, r: -90, tilt: 64, f: 7 + k * .3, ph: k, ini: 260, sal: 6, L: alaP, R: alaP, ww: 9, wh: 4.4, amp: 58, cu: cuerpoP, bw: 2.6, bh: 7, pa: { dir: 1, v: 7, y1: hh * 1.08 + dy, span: hw * 3.2, dx } }));
     // menos flores sueltas pasando: se queda una de cada dos
      }
 
@@ -828,18 +829,18 @@ setTimeout(plan_b, 30000);
     const icono = () => { play.dataset.m = modo; play.setAttribute("aria-label", modo === "play" ? "Pausar" : modo === "fin" ? "Ver otra vez" : "Continuar"); };
     const paso = (now) => { if (modo !== "play") return; const dt = Math.min(.1, (now - t0) / 1000); t0 = now;
       if (espera > 0) espera -= dt;
-      else { const k0 = Math.floor(u + 1e-6), sig = k0 + 1; if (u - k0 < .24) u = k0 + .24; u = Math.min(k0 + .8, u + dt * .56 / MOVE); if (u >= k0 + .8 - 1e-6) u = sig; if (u >= sig - 1e-6) { u = sig; if (sig >= N - 1) { modo = "fin"; icono(); pon(); muestra("Toca ↺ para verla otra vez", false); return; } espera = HOLD[sig] || 5; } }
+      else { const k0 = Math.floor(u + 1e-6), sig = k0 + 1; if (u - k0 < .24) u = k0 + .24; u = Math.min(k0 + .8, u + dt * .56 / MOVE); if (u >= k0 + .8 - 1e-6) u = sig; if (u >= sig - 1e-6) { u = sig; if (sig >= N - 1) { modo = "fin"; icono(); pon(); muestra("Toca ↺ para repetir", false); return; } espera = HOLD[sig] || 5; } }
       pon(); requestAnimationFrame(paso); };
     const jugar = () => { const u2 = uDe(); if (Math.abs(u2 - u) > .05) { u = u2; if (Math.abs(u - Math.round(u)) < .05) { u = Math.round(u); espera = 1.5; } } modo = "play"; icono(); t0 = performance.now(); est.classList.remove("on"); requestAnimationFrame(paso); };
-    const pausa = (msg) => { if (modo !== "play") return; modo = "pausa"; icono(); muestra(msg || "En pausa · toca para continuar", true); };
-    window.__auto = () => { document.body.classList.add("auto"); u = 0; espera = HOLD[0]; modo = "play"; icono(); t0 = performance.now(); requestAnimationFrame(paso); muestra("Toca la pantalla para pausar", false); };
+    const pausa = (msg) => { if (modo !== "play") return; modo = "pausa"; icono(); muestra(msg || "En pausa", false); };
+    window.__auto = () => { document.body.classList.add("auto"); u = 0; espera = HOLD[0]; modo = "play"; icono(); t0 = performance.now(); requestAnimationFrame(paso); muestra("Toca para pausar", false); };
     play.addEventListener("click", (e) => { e.stopPropagation(); if (!document.body.classList.contains("auto")) return;
       if (modo === "play") pausa(); else if (modo === "fin") { scrollTo(0, 0); if (window.__reset) window.__reset(); u = 0; espera = HOLD[0]; modo = "play"; icono(); t0 = performance.now(); est.classList.remove("on"); requestAnimationFrame(paso); } else jugar(); });
     addEventListener("pointerdown", (e) => { tocT = performance.now(); tx = e.clientX; ty = e.clientY; }, { passive: true });
     addEventListener("pointerup", (e) => { if (!document.body.classList.contains("auto") || (e.target.closest && e.target.closest("#play"))) return;
       if (performance.now() - tocT < 450 && Math.hypot(e.clientX - tx, e.clientY - ty) < 12) { if (modo === "play") pausa(); else if (modo === "pausa") jugar(); } }, { passive: true });
-    addEventListener("touchmove", () => pausa("En pausa · toca para que siga solo"), { passive: true });
-    addEventListener("wheel", () => pausa("En pausa · toca para que siga solo"), { passive: true });
+    addEventListener("touchmove", () => pausa("En pausa"), { passive: true });
+    addEventListener("wheel", () => pausa("En pausa"), { passive: true });
     addEventListener("keydown", (e) => { if (e.key === " " && document.body.classList.contains("auto")) { e.preventDefault(); play.click(); } });
   }
   listoYa = true; window.__ok = 1; const toca = $("toca"); toca.textContent = "Toca para empezar"; toca.classList.add("ok"); portal.classList.add("vivo"); if (pide) abrir();
