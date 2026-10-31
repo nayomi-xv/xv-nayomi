@@ -647,8 +647,8 @@ setTimeout(plan_b, 30000);
   for (let e = 0; e < 8; e++) { const z0 = -e * D, dd = 42, zz = z0 + 100 - dd, vx = hw * dd / 100, vy = hh * dd / 100, lado = e % 2 ? -1 : 1;
     obj(floresT[(e * 2) % 5], { x: -lado * vx * .92, y: -vy * .9, z: zz, w: 9, h: 9, rz: e, sal: 3, ini: 230, spin: .08 * lado });
     obj(hojaT, { x: -lado * vx * 1.02, y: -vy * .72, z: zz - 1, w: 13, h: 7, rz: (lado > 0 ? 210 : -30) * RAD, sal: 3, ini: 230 });
-    obj(floresT[(e * 2 + 1) % 5], { x: lado * vx * .95, y: vy * .55, z: zz + 3, w: 6.5, h: 6.5, rz: e * 2, sal: 3, ini: 230, spin: -.1 * lado });
-    obj(hojaT, { x: lado * vx * 1.05, y: vy * .66, z: zz + 2, w: 10, h: 5.5, rz: (lado > 0 ? -25 : 205) * RAD, sal: 3, ini: 230 });
+    obj(floresT[(e * 2 + 1) % 5], { x: lado * vx * 1.02, y: vy * .86, z: zz + 3, w: 6.5, h: 6.5, rz: e * 2, sal: 3, ini: 230, spin: -.1 * lado });
+    obj(hojaT, { x: lado * vx * 1.08, y: vy * .94, z: zz + 2, w: 10, h: 5.5, rz: (lado > 0 ? -25 : 205) * RAD, sal: 3, ini: 230 });
     // corazones que suben y brillos alrededor
     for (let j = 0; j < (lite ? 3 : 6); j++) obj(coraT, { x: (j % 2 ? 1 : -1) * hw * rnd(.45, .85), y: 0, z: z0 + rnd(-10, 14), w: rnd(3.4, 5.4), h: 0, sube: hh * 2.2, ph: rnd(0, hh * 2.2), ini: 200, sal: 8 });
     for (let j = 0; j < (lite ? 3 : 7); j++) obj(brilloT, { x: (Math.random() < .5 ? -1 : 1) * rnd(.56, 1.05) * hw, y: rnd(-.8, .8) * hh, z: z0 + rnd(-6, 16), w: rnd(2.2, 4), h: 0, ini: 200, sal: 8, tw: rnd(1.2, 2.6), deco: 1 }); }
